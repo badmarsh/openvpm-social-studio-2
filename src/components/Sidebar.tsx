@@ -21,7 +21,14 @@ import {
   Bot,
   Lightbulb,
   Package,
-  Beaker
+  Beaker,
+  Microscope,
+  Brain,
+  Activity,
+  Inbox,
+  CreditCard,
+  Pill,
+  Clock
 } from 'lucide-react';
 import { UserRole } from '../types';
 
@@ -48,10 +55,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const navSections = [
     {
-      title: 'Marketing',
+      title: 'Hlavné & Komunikácia',
       items: [
         { id: 'dashboard', label: 'Nástenka', icon: LayoutDashboard },
         { id: 'calendar', label: 'Kalendár', icon: Calendar },
+        { id: 'inbox', label: 'Omnichannel Inbox', icon: Inbox }
+      ]
+    },
+    {
+      title: 'Marketing',
+      items: [
         { id: 'templates', label: 'Šablóny', icon: Grid },
         { id: 'wizard', label: 'AI Generátor', icon: Wand2 },
         { id: 'competitor-analysis', label: 'Analýza Konkurencie', icon: Map }
@@ -62,6 +75,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       items: [
         { id: 'automations', label: 'CRM Automaty', icon: Zap },
         { id: 'crm', label: 'Klienti & Pacienti', icon: Users },
+        { id: 'wearables', label: 'Smart Wearables', icon: Activity },
         { id: 'telemedicine', label: 'Telemedicína', icon: Video },
         { id: 'chatbot', label: 'AI Chatbot', icon: Bot },
         {
@@ -73,22 +87,28 @@ export const Sidebar: React.FC<SidebarProps> = ({
       ]
     },
     {
+      title: 'Klinika & Prevádzka',
+      items: [
+        { id: 'rostering', label: 'Smart Rostering (Služby)', icon: Clock },
+        { id: 'inventory', label: 'AI Sklad & Objednávky', icon: Package },
+        { id: 'prescriptions', label: 'Digitálne Predpisy', icon: Pill },
+        { id: 'payments', label: 'Smart Platby', icon: CreditCard }
+      ]
+    },
+    {
       title: 'Klinické Dokumenty',
       items: [
         { id: 'canvas', label: 'AI Canvas (SOP)', icon: BookOpen },
-        { id: 'scribe', label: 'AI Scribe (Záznamy)', icon: Mic }
+        { id: 'scribe', label: 'AI Scribe (Záznamy)', icon: Mic },
+        { id: 'diagnostics', label: 'AI Diagnostika (RTG)', icon: Microscope },
+        { id: 'copilot', label: 'AI Copilot (Účtovanie)', icon: Brain }
       ]
     },
     {
-      title: 'Inovácie & Produkty',
+      title: 'Inovácie & Nastavenia',
       items: [
         { id: 'innovations', label: 'Inovácie & Výskum', icon: Beaker },
-        { id: 'suppliers', label: 'Dodávatelia (White-label)', icon: Package }
-      ]
-    },
-    {
-      title: 'Nastavenia',
-      items: [
+        { id: 'suppliers', label: 'Dodávatelia (White-label)', icon: Package },
         { id: 'brandkit', label: 'Brand Kit', icon: Building2 }
       ]
     }

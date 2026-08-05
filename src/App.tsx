@@ -33,6 +33,14 @@ import { TelemedicineView } from './components/TelemedicineView';
 import { ChatbotView } from './components/ChatbotView';
 import { InnovationsView } from './components/InnovationsView';
 import { SuppliersView } from './components/SuppliersView';
+import { AIDiagnosticsView } from './components/AIDiagnosticsView';
+import { AICopilotView } from './components/AICopilotView';
+import { PetWearablesView } from './components/PetWearablesView';
+import { InboxView } from './components/InboxView';
+import { PaymentsView } from './components/PaymentsView';
+import { InventoryManagerView } from './components/InventoryManagerView';
+import { DigitalPrescriptionsView } from './components/DigitalPrescriptionsView';
+import { SmartRosteringView } from './components/SmartRosteringView';
 import { PostDetailModal } from './components/PostDetailModal';
 import { ToastProvider, useToast } from './context/ToastContext';
 
@@ -228,6 +236,14 @@ function AppContent() {
 
         {currentTab === 'canvas' && <AICanvasView brandKit={brandKit} role={role} />}
         {currentTab === 'scribe' && <AIScribeView />}
+        {currentTab === 'diagnostics' && <AIDiagnosticsView />}
+        {currentTab === 'copilot' && <AICopilotView />}
+        {currentTab === 'wearables' && <PetWearablesView />}
+        {currentTab === 'inbox' && <InboxView />}
+        {currentTab === 'payments' && <PaymentsView />}
+        {currentTab === 'inventory' && <InventoryManagerView />}
+        {currentTab === 'prescriptions' && <DigitalPrescriptionsView />}
+        {currentTab === 'rostering' && <SmartRosteringView />}
         {currentTab === 'competitor-analysis' && <CompetitorAnalysisView />}
         {currentTab === 'telemedicine' && <TelemedicineView />}
         {currentTab === 'chatbot' && <ChatbotView />}
