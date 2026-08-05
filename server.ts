@@ -449,9 +449,9 @@ function escapeXml(unsafe: string) {
 // ------------------------------------------------------------------
 const mockDB = {
   clients: [
-    { id: 'c1', practiceId: 'p1', name: 'Ján Novák', phone: '+421900111222', email: 'jan@example.com', languagePreference: 'SK', tags: ['dental', 'senior'], activeWellnessPlan: true },
-    { id: 'c2', practiceId: 'p1', name: 'Kovács Anna', phone: '+36301112222', email: 'anna@example.com', languagePreference: 'HU', tags: ['fear-free-patient'], activeWellnessPlan: false },
-    { id: 'c3', practiceId: 'p1', name: 'Peter Šťastný', phone: '+421900333444', email: 'peter@example.com', languagePreference: 'SK', tags: [], activeWellnessPlan: true },
+    { id: 'c1', practiceId: 'p1', name: 'Ján Novák', phone: '+421900111222', email: 'jan@example.com', languagePreference: 'SK', tags: ['pes-senior', 'dental-nikdy'], activeWellnessPlan: true },
+    { id: 'c2', practiceId: 'p1', name: 'Kovács Anna', phone: '+36301112222', email: 'anna@example.com', languagePreference: 'HU', tags: ['mačka-indoor', 'fear-free'], activeWellnessPlan: false },
+    { id: 'c3', practiceId: 'p1', name: 'Peter Šťastný', phone: '+421900333444', email: 'peter@example.com', languagePreference: 'SK', tags: ['neaktivny-6mes'], activeWellnessPlan: false },
   ],
   automations: [
     { id: 'a1', practiceId: 'p1', triggerEvent: 'visit_completed', name: 'Žiadosť o recenziu (Google)', isActive: true, actionType: 'sms', templatePrompt: 'Generate a polite SMS asking for a Google Review. Reference the pet\'s good behavior.' },
@@ -738,8 +738,7 @@ app.get('/api/logs', (req, res) => {
 // OPENVPM WEBHOOK LISTENER
 // ------------------------------------------------------------------
 app.post('/api/webhooks/openvpm', async (req, res) => {
-  const { event, clientId, eventData } = req.body;
-  // e.g. event: 'visit_completed', 'appointment_no_show', 'payment_failed'
+  const { event, clientId, petId, metadata } = req.body;
   
   const client = mockDB.clients.find(c => c.id === clientId);
   if (!client) return res.status(404).json({ error: 'Client not found' });
@@ -747,38 +746,64 @@ app.post('/api/webhooks/openvpm', async (req, res) => {
   // Acknowledge webhook immediately
   res.json({ received: true });
 
-  // Process triggers asynchronously
-  const activeAutomations = mockDB.automations.filter(a => a.isActive && a.triggerEvent === event);
-  
-  for (const automation of activeAutomations) {
-    // Specialized logic
-    if (event === 'visit_completed' && automation.name.includes('Follow-up Education')) {
-      if (!client.tags.includes('dental')) {
-        continue; // Skip if no relevant tag (mocking specialized follow-up)
-      }
+  // Trigger Logic
+  let promptContext = '';
+  let actionType = 'sms';
+  let shouldTrigger = false;
+
+  // 1. Smart Discharge Ask 2.0
+  if (event === 'appointment.completed') {
+    const isSurgery = metadata?.serviceType === 'surgery' || metadata?.serviceType === 'emergency';
+    const delay = isSurgery ? '24 hours' : '2 hours';
+    const toneAdj = isSurgery ? 'Highly empathetic, focus on recovery' : 'Upbeat, ask for a Google Review';
+    
+    // Check if client previously left a 5-star review (mock logic: check tags)
+    if (client.tags.includes('loyal-reviewer')) {
+      console.log(`[Webhook] Skipping Discharge Ask for ${client.name} (already a 5★ reviewer).`);
+    } else {
+      shouldTrigger = true;
+      promptContext = `Post-appointment follow-up. Delay: ${delay}. Tone: ${toneAdj}. Service: ${metadata?.serviceType || 'general'}. Generate a message asking for a Google Review or wishing well.`;
     }
 
-    if (event === 'visit_completed' && automation.name.includes('Discharge Ask')) {
-      // Mocking 2 hour delay (using setTimeout in real app, but here just proceeding for demo)
-      console.log(`[Webhook] Scheduled 2-hour delay for Discharge Ask for client ${client.name}`);
+    // 3. Wellness Plan Upsell Automation
+    if (metadata?.serviceType === 'vaccination_puppy' && !client.activeWellnessPlan) {
+      shouldTrigger = true;
+      actionType = 'email';
+      promptContext += `\nAlso, trigger Wellness Plan Upsell: Calculate savings (e.g., 'Ušetríte 40€ oproti jednotlivým návštevám'). Offer Puppy Wellness Plan for 15€/month. Include 1-click enrollment link to OpenVPM.`;
     }
+  }
 
-    if (event === 'payment_failed') {
-      // Flag client in CRM
-      client.activeWellnessPlan = false;
-    }
+  // 4. No-Show Rebooking
+  if (event === 'appointment.no_show') {
+    shouldTrigger = true;
+    const noShowCount = client.tags.filter(t => t === 'no-show').length + 1; // mock count
+    promptContext = `Client did not show up for appointment. Empathetic SMS: 'Stalo sa niečo? Chceme vám pomôcť.' Offer alternative like telemedicine. If this is repeated (count: ${noShowCount}), suggest receptionist call.`;
+  }
 
-    // Call Gemini to generate message
-    const prompt = `
+  if (event === 'wellness_plan.expired') {
+    shouldTrigger = true;
+    actionType = 'email';
+    promptContext = `Wellness plan has expired. Remind them of the benefits (vaccines, checkups) and provide a link to renew.`;
+  }
+
+  // 5. IG DM Auto-Responder
+  if (event === 'instagram.dm') {
+    shouldTrigger = true;
+    actionType = 'instagram_dm';
+    promptContext = `Analyzuj túto správu z Instagramu: "${metadata?.message || ''}". Urči intent (Booking, Question, Emergency). Vygeneruj 3 návrhy odpovede (od krátkej, po detailnejšiu), ktoré môže personál schváliť. Vráť odpoveď vo formáte JSON obsahujúcom intent a pole suggestedReplies.`;
+  }
+
+  if (!shouldTrigger) return;
+
+  const prompt = `
 You are an expert veterinary communicator at ${mockDB.brandKits[0].clinicName}.
-Generate a ${automation.actionType} message for client "${client.name}".
-Goal: ${automation.templatePrompt}
-Event Context: ${JSON.stringify(eventData || {})}
-Client Tags: ${client.tags.join(', ')}
+Generate a ${actionType} message for client "${client.name}".
+Goal: ${promptContext}
 
 CRITICAL AI GUARDRAILS:
-1. Southern Slovakia Demographics: The output MUST be a JSON object containing both languages: Slovak ("sk") and Hungarian ("hu").
-2. Fear-Free Tone: Ensure the tone is warm, professional, never fear-mongering, and provides no direct medical diagnoses.
+1. Language: The output MUST be in Slovak ("sk") and Hungarian ("hu").
+2. Fear-Free Tone: Ensure the tone is warm, professional, never fear-mongering, and provides no direct medical diagnoses. Emphasize "pohodlie" instead of "bez bolesti".
+3. Add disclaimer if giving advice: "Tieto rady nenahrádzajú veterinárne vyšetrenie".
 
 Output strict JSON:
 {
@@ -787,50 +812,45 @@ Output strict JSON:
 }
 `;
 
+  try {
+    const ai = getAI();
+    const response = await ai.models.generateContent({
+      model: 'gemini-3.6-flash',
+      contents: prompt,
+      config: { responseMimeType: 'application/json' }
+    });
+    
+    const rawText = response.text || '{}';
+    let parsedJson;
     try {
-      const ai = getAI();
-      const response = await ai.models.generateContent({
-        model: 'gemini-3.6-flash',
-        contents: prompt,
-        config: { responseMimeType: 'application/json' }
-      });
-      
-      const rawText = response.text || '{}';
-      let parsedJson;
-      try {
-        parsedJson = JSON.parse(rawText);
-      } catch(e) {
-        const match = rawText.match(/\{[\s\S]*\}/);
-        parsedJson = match ? JSON.parse(match[0]) : { sk: rawText, hu: rawText };
-      }
-
-      const generatedMessage = client.languagePreference === 'HU' ? (parsedJson.hu || parsedJson.sk) : (parsedJson.sk || parsedJson.hu);
-
-      // Mock SMS Gateway / Email sending
-      console.log(`
-===================================`);
-      console.log(`[MOCK ${automation.actionType.toUpperCase()} GATEWAY]`);
-      console.log(`To: ${client.name} (${client.phone || client.email})`);
-      console.log(`Language: ${client.languagePreference}`);
-      console.log(`Message: ${generatedMessage}`);
-      console.log(`===================================
-`);
-
-      // Log it
-      mockDB.communicationsLog.unshift({
-        id: 'l' + Date.now(),
-        practiceId: client.practiceId,
-        clientId: client.id,
-        automationId: automation.id,
-        status: 'sent',
-        timestamp: new Date().toISOString(),
-        channel: automation.actionType,
-        messageContent: generatedMessage
-      });
-
-    } catch(err) {
-      console.error('[Webhook AI Error]', err);
+      parsedJson = JSON.parse(rawText);
+    } catch(e) {
+      const match = rawText.match(/\{[\s\S]*\}/);
+      parsedJson = match ? JSON.parse(match[0]) : { sk: rawText, hu: rawText };
     }
+
+    const generatedMessage = client.languagePreference === 'HU' ? (parsedJson.hu || parsedJson.sk) : (parsedJson.sk || parsedJson.hu);
+
+    console.log(`\n===================================`);
+    console.log(`[MOCK ${actionType.toUpperCase()} GATEWAY]`);
+    console.log(`To: ${client.name} (${client.phone || client.email})`);
+    console.log(`Language: ${client.languagePreference}`);
+    console.log(`Message: ${generatedMessage}`);
+    console.log(`===================================\n`);
+
+    mockDB.communicationsLog.unshift({
+      id: 'l' + Date.now(),
+      practiceId: client.practiceId,
+      clientId: client.id,
+      automationId: 'auto_gen',
+      status: 'sent',
+      timestamp: new Date().toISOString(),
+      channel: actionType,
+      messageContent: generatedMessage
+    });
+
+  } catch(err) {
+    console.error('[Webhook AI Error]', err);
   }
 });
 
@@ -840,9 +860,9 @@ Output strict JSON:
 // REVIEWS & REPUTATION MOCK ENDPOINTS
 // ------------------------------------------------------------------
 const mockReviews = [
-  { id: 'r1', author: 'Jozef Mak', rating: 5, text: 'Skvelý prístup pána doktora, náš Rex sa vôbec nebál.', date: new Date(Date.now() - 86400000).toISOString(), reply: null },
-  { id: 'r2', author: 'Katarína Nová', rating: 3, text: 'Ceny sú trochu vysoké, ale inak dobrá starostlivosť.', date: new Date(Date.now() - 172800000).toISOString(), reply: null },
-  { id: 'r3', author: 'Tóth Gábor', rating: 1, text: 'Veľmi dlhé čakanie napriek objednaniu!', date: new Date(Date.now() - 259200000).toISOString(), reply: null },
+  { id: 'r1', platform: 'Google', author: 'Jozef Mak', rating: 5, text: 'Skvelý prístup pána doktora, náš Rex sa vôbec nebál.', date: new Date(Date.now() - 86400000).toISOString(), reply: null },
+  { id: 'r2', platform: 'Facebook', author: 'Katarína Nová', rating: 3, text: 'Ceny sú trochu vysoké, ale inak dobrá starostlivosť.', date: new Date(Date.now() - 172800000).toISOString(), reply: null },
+  { id: 'r3', platform: 'Google', author: 'Tóth Gábor', rating: 1, text: 'Veľmi dlhé čakanie napriek objednaniu!', date: new Date(Date.now() - 259200000).toISOString(), reply: null },
 ];
 
 app.get('/api/reviews', (req, res) => {
@@ -855,7 +875,7 @@ app.post('/api/reviews/:id/reply', async (req, res) => {
 
   const prompt = `
 You are an expert veterinary practice manager at OpenVPM.
-Draft a professional, diplomatic reply to this Google Review.
+Draft a professional, diplomatic reply to this ${review.platform || 'Google'} Review.
 Reviewer: ${review.author}
 Rating: ${review.rating}/5
 Review Text: "${review.text}"
@@ -888,6 +908,57 @@ app.post('/api/reviews/:id/send-reply', (req, res) => {
   if (!review) return res.status(404).json({ error: 'Review not found' });
   review.reply = req.body.replyText;
   res.json({ success: true, review });
+});
+
+// ------------------------------------------------------------------
+// MAPS ANALYSIS ENDPOINT (COMPETITOR ANALYSIS)
+// ------------------------------------------------------------------
+app.post('/api/maps-analysis', async (req, res) => {
+  const { location } = req.body;
+  if (!location) {
+    return res.status(400).json({ error: 'Location is required' });
+  }
+
+  const prompt = `
+Nájdite 5 veterinárnych kliník alebo ambulancií v okolí: ${location}.
+Analyzujte ich služby, približné ceny (ak sú dostupné) a recenzie.
+Vygenerujte strategický report pre našu kliniku, napr. "Konkurencia nemá Fear-Free prístup -> zamerajte sa na to".
+Odpovedajte v slovenskom jazyku.
+Formát: Markdown s jasnými odporúčaniami.
+`;
+
+  try {
+    const ai = getAI();
+    const response = await ai.models.generateContent({
+      model: "gemini-3.6-flash",
+      contents: prompt,
+      config: {
+        tools: [{ googleMaps: {} }],
+      },
+    });
+
+    const chunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks;
+    let urls: string[] = [];
+    if (chunks) {
+      chunks.forEach((chunk: any) => {
+        if (chunk.web?.uri) {
+          urls.push(chunk.web.uri);
+        }
+      });
+    }
+    
+    // De-duplicate URLs
+    urls = Array.from(new Set(urls));
+
+    res.json({
+      success: true,
+      text: response.text,
+      groundingUrls: urls
+    });
+  } catch (err: any) {
+    console.error('Maps analysis error:', err);
+    res.status(500).json({ error: 'Failed to analyze competitors' });
+  }
 });
 
 // ------------------------------------------------------------------
@@ -1012,6 +1083,60 @@ CRITICAL VETERINARY GUARDRAILS & FORMATTING RULES:
 });
 
 // ------------------------------------------------------------------
+// SMART CALENDAR GENERATION (80/20 Rule)
+// ------------------------------------------------------------------
+app.post('/api/generate-calendar', async (req, res) => {
+  const { brandKit, startDate } = req.body;
+  const start = startDate ? new Date(startDate) : new Date();
+  
+  const prompt = `
+Vytvor 30-dňový obsahový plán pre veterinárnu kliniku s názvom "${brandKit?.clinicName || 'Klinika'}".
+Pravidlo 80/20: 80% edukačný/hodnotný obsah, 20% propagačný (napr. Wellness Plán, dentálna hygiena).
+Vygeneruj 20 príspevkov rozložených do 30 dní (4-5 príspevkov týždenne).
+Každý príspevok by mal obsahovať:
+- caption (krátky text v slovenčine, pútavý, s Fear-Free tónom)
+- hashtags (zoznam značiek)
+- dayOffset (číslo od 0 do 29 reprezentujúce deň v pláne)
+- category (vzdelávací, zákulisie, zábava, propagačný)
+
+Vráť striktný JSON vo formáte:
+{
+  "posts": [
+    {
+      "dayOffset": 0,
+      "category": "vzdelávací",
+      "caption": "Text príspevku...",
+      "hashtags": ["#vet", "#pes"]
+    }
+  ]
+}
+`;
+
+  try {
+    const ai = getAI();
+    const response = await ai.models.generateContent({
+      model: 'gemini-3.1-pro-preview',
+      contents: prompt,
+      config: { responseMimeType: 'application/json' }
+    });
+
+    let rawText = response.text || '{}';
+    let parsedJson;
+    try {
+      parsedJson = JSON.parse(rawText);
+    } catch(e) {
+      const match = rawText.match(/\{[\s\S]*\}/);
+      parsedJson = match ? JSON.parse(match[0]) : { posts: [] };
+    }
+
+    res.json({ success: true, plan: parsedJson.posts });
+  } catch (err: any) {
+    console.error('Calendar generation error:', err);
+    res.status(500).json({ error: 'Failed to generate calendar' });
+  }
+});
+
+// ------------------------------------------------------------------
 // POSTIZ / MIXPOST MOCK PUBLISHING ENDPOINT
 // ------------------------------------------------------------------
 app.post('/api/publish/postiz', (req, res) => {
@@ -1029,24 +1154,75 @@ app.post('/api/publish/postiz', (req, res) => {
 // ADDITIONAL API ENDPOINTS (SPEC COMPLIANCE)
 // ------------------------------------------------------------------
 
-app.post('/api/generate/caption', async (req, res) => {
-  // Alias to /api/generate-copy
-  const { template, brandKit, input } = req.body;
-  req.body.templateName = template?.name;
-  req.body.category = template?.category;
-  req.body.promptSkeleton = template?.promptSkeleton;
-  req.body.topicInputs = input;
-  req.body.platforms = template?.platforms || ['IG'];
+app.post('/api/generate-copy', async (req, res) => {
+  const { templateName, category, topicInputs, brandKit, platforms, language = 'sk' } = req.body;
   
-  // Directly forward request to internal logic or just do a fetch equivalent
-  // For simplicity, we just execute the same logic inline or return a mock if it's too complex.
-  res.json({
-    shortCaption: "Krátky pútavý text.",
-    mediumCaption: "Stredne dlhý text s vysvetlením.",
-    playfulCaption: "Vtipný a uvoľnený text pre sociálne siete 🐾",
-    hashtags: ["#vet", "#pes", "#zdravie"],
-    altText: "Obrázok zdravého psíka v ambulancii."
-  });
+  const prompt = `
+Vytvor 3 varianty obsahu na sociálne siete pre veterinárnu kliniku.
+Klinika: ${brandKit?.clinicName || 'Naša klinika'}
+Téma/Téma: ${JSON.stringify(topicInputs)}
+Jazyk: ${language === 'hu' ? 'Maďarčina' : 'Slovenčina'}
+
+DÔLEŽITÉ FEAR-FREE PRAVIDLÁ:
+- Nikdy nepoužívaj slová vyvolávajúce strach ("bolesť", "strach", "bolestivé").
+- Vždy použi pozitívne rámcovanie ("pohodlie", "bezstresové prostredie").
+- Na koniec pridaj disclaimer: "Tieto rady nenahrádzajú veterinárne vyšetrenie."
+
+Vygeneruj 3 varianty:
+1. type: "short", caption: Krátky variant (max 50 znakov, priamy)
+2. type: "medium", caption: Stredný variant (max 150 znakov, edukačný)
+3. type: "playful", caption: Vtipný/hravý variant (max 150 znakov, s emoji)
+
+Vráť striktný JSON vo formáte:
+{
+  "variants": [
+    { "type": "short", "caption": "..." },
+    { "type": "medium", "caption": "..." },
+    { "type": "playful", "caption": "..." }
+  ],
+  "hashtags": ["#...", "#..."],
+  "altText": "Popis obrázku pre nevidiacich..."
+}
+`;
+
+  try {
+    const ai = getAI();
+    const response = await ai.models.generateContent({
+      model: 'gemini-3.6-flash',
+      contents: prompt,
+      config: { responseMimeType: 'application/json' }
+    });
+
+    let rawText = response.text || '{}';
+    let parsedJson;
+    try {
+      parsedJson = JSON.parse(rawText);
+    } catch(e) {
+      const match = rawText.match(/\{[\s\S]*\}/);
+      parsedJson = match ? JSON.parse(match[0]) : {};
+    }
+
+    res.json({
+      success: true,
+      data: parsedJson,
+      modelUsed: 'gemini-3.6-flash'
+    });
+  } catch (err: any) {
+    console.error('Generation error:', err);
+    res.json({
+      success: true,
+      data: {
+        variants: [
+          { type: 'short', caption: "Zdravie na prvom mieste." },
+          { type: 'medium', caption: "Udržujte svojho miláčika zdravého a v pohodlí." },
+          { type: 'playful', caption: "Labky hore pre zdravie! 🐾" }
+        ],
+        hashtags: ["#vet"],
+        altText: "Veterinár a pes"
+      },
+      modelUsed: 'fallback'
+    });
+  }
 });
 
 app.post('/api/generate/image', async (req, res) => {
@@ -1066,40 +1242,56 @@ app.post('/api/video-download', (req, res) => {
   res.redirect('https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm');
 });
 
-app.post('/api/transcribe', async (req, res) => {
-  const { audioBase64, mimeType } = req.body;
-  // Mock transcription SOAP
-  const soap = `
-### S (Subjektívne)
-Majiteľ uvádza, že psík (Charlie, 5r. Zlatý retriever) už dva dni odmieta stravu a je apatický.
+app.post('/api/transcribe-and-generate', async (req, res) => {
+  const { audioBase64, mimeType, language = 'sk' } = req.body;
+  
+  if (!audioBase64) {
+    return res.status(400).json({ error: 'No audio provided' });
+  }
 
-### O (Objektívne)
-Teplota 39.2°C, mierna dehydratácia. Brucho palpateľne citlivé.
+  const prompt = `
+Vypočuj si nasledujúci hlasový záznam od veterinára.
+1. Vytvor krátky prepis (transcript).
+2. Na základe prípadu vygeneruj 3 varianty príspevku na sociálne siete (edukačný, dramatický, vtipný) v slovenskom jazyku.
+3. Pridaj povinné upozornenie: "Toto nie je náhrada za veterinárne vyšetrenie."
 
-### A (Assessment)
-Podozrenie na gastrointestinálnu infekciu.
+Vráť striktný JSON vo formáte:
+{
+  "transcript": "Prepis...",
+  "socialPostVariants": [
+    { "type": "edukačný", "caption": "..." },
+    { "type": "dramatický", "caption": "..." },
+    { "type": "vtipný", "caption": "..." }
+  ],
+  "disclaimer": "Toto nie je náhrada za veterinárne vyšetrenie."
+}
+`;
 
-### P (Plán)
-1. Odber krvi.
-2. Rehydratácia (infúzia).
-3. Kontrola zajtra.
-  `;
-  res.json({ transcription: soap });
-});
+  try {
+    const ai = getAI();
+    const response = await ai.models.generateContent({
+      model: 'gemini-3.6-flash',
+      contents: [
+        prompt,
+        { inlineData: { data: audioBase64, mimeType: mimeType || 'audio/webm' } }
+      ],
+      config: { responseMimeType: 'application/json' }
+    });
 
-app.post('/api/maps-analysis', (req, res) => {
-  const text = `
-### Strategická Analýza: ${req.body.location || 'Okolie'}
-Identifikovali sme 3 hlavné veterinárne kliniky vo vašom okolí. 
+    const rawText = response.text || '{}';
+    let parsedJson;
+    try {
+      parsedJson = JSON.parse(rawText);
+    } catch(e) {
+      const match = rawText.match(/\{[\s\S]*\}/);
+      parsedJson = match ? JSON.parse(match[0]) : {};
+    }
 
-**Hlavné medzery na trhu:**
-- Chýba pohotovostná služba po 20:00.
-- Žiadna klinika neponúka Fear-Free certifikáciu.
-
-**Odporúčanie:** 
-Zamerajte svoj marketing na bezstresový prístup a večerné ordinačné hodiny.
-  `;
-  res.json({ text, groundingUrls: ['https://maps.google.com/?q=veterinar', 'https://maps.google.com/?q=veterinarna+klinika'] });
+    res.json(parsedJson);
+  } catch (err: any) {
+    console.error('Transcription error:', err);
+    res.status(500).json({ error: 'Failed to transcribe and generate' });
+  }
 });
 
 

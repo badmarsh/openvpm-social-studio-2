@@ -11,13 +11,13 @@ export type MediaType = 'image' | 'video' | 'none';
 export type FontStyle = 'playful' | 'professional' | 'warm';
 
 export type Category =
-  | 'Preventive Care & Wellness'
-  | 'Educational'
-  | 'Practice & Team'
-  | 'Client & Patient Engagement'
-  | 'Promotions & Announcements'
-  | 'Community & Events'
-  | 'Reels / Video-first';
+  | 'Preventívna starostlivosť & Wellness'
+  | 'Edukačné'
+  | 'Klinika & Tím'
+  | 'Klientska interakcia'
+  | 'Promo & Oznamy'
+  | 'Komunita & Podujatia'
+  | 'Reels / Video';
 
 export interface TeamMember {
   id: string;
@@ -78,20 +78,23 @@ export interface HistoryItem {
 
 export interface Post {
   id: string;
-  practiceId: string;
-  templateId: string | null;
+  practiceId?: string;
+  templateId?: string | null;
   status: PostStatus;
-  createdBy: string;
-  createdAt: string;
+  createdBy?: string;
+  createdAt?: string;
   scheduledDate: string; // ISO date string YYYY-MM-DD
   scheduledTime?: string; // e.g. "10:00 AM"
   variants: Record<string, PostVariant>; // key is Platform e.g. 'IG'
-  reviewNotes: string[];
-  history: HistoryItem[];
+  reviewNotes?: string[];
+  history?: HistoryItem[];
   hasConsent?: boolean;
   topicInputs?: Record<string, string>;
   overlayText?: string;
   hasWatermark?: boolean;
+  platforms?: Platform[];
+  templateName?: string;
+  assetUrl?: string | null;
 }
 
 export interface MediaAsset {

@@ -18,7 +18,10 @@ import {
   Image as ImageIcon,
   Map,
   Video,
-  Bot
+  Bot,
+  Lightbulb,
+  Package,
+  Beaker
 } from 'lucide-react';
 import { UserRole } from '../types';
 
@@ -51,7 +54,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
         { id: 'calendar', label: 'Kalendár', icon: Calendar },
         { id: 'templates', label: 'Šablóny', icon: Grid },
         { id: 'wizard', label: 'AI Generátor', icon: Wand2 },
-        { id: 'media', label: 'AI Media Creator', icon: ImageIcon },
         { id: 'competitor-analysis', label: 'Analýza Konkurencie', icon: Map }
       ]
     },
@@ -64,7 +66,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         { id: 'chatbot', label: 'AI Chatbot', icon: Bot },
         {
           id: 'reviews',
-          label: 'Google Recenzie',
+          label: 'Google & FB Recenzie',
           icon: MessageSquare,
           badge: pendingReviewsCount > 0 ? `${pendingReviewsCount}` : undefined
         }
@@ -75,6 +77,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
       items: [
         { id: 'canvas', label: 'AI Canvas (SOP)', icon: BookOpen },
         { id: 'scribe', label: 'AI Scribe (Záznamy)', icon: Mic }
+      ]
+    },
+    {
+      title: 'Inovácie & Produkty',
+      items: [
+        { id: 'innovations', label: 'Inovácie & Výskum', icon: Beaker },
+        { id: 'suppliers', label: 'Dodávatelia (White-label)', icon: Package }
       ]
     },
     {

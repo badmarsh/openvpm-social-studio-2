@@ -37,7 +37,7 @@ interface GenerationWizardProps {
   templates: Template[];
   role: UserRole;
   onSavePost: (post: Post) => void;
-  onZrušiť: () => void;
+  onCancel: () => void;
 }
 
 export const GenerationWizard: React.FC<GenerationWizardProps> = ({
@@ -47,7 +47,7 @@ export const GenerationWizard: React.FC<GenerationWizardProps> = ({
   templates,
   role,
   onSavePost,
-  onZrušiť
+  onCancel
 }) => {
   // Wizard Step State (1: Inputs, 2: Copy, 3: Visual, 4: Light Edit, 5: Review & Save)
   const [step, setStep] = useState<number>(1);
@@ -82,6 +82,7 @@ export const GenerationWizard: React.FC<GenerationWizardProps> = ({
   const [generatedImageUrl, setGeneratedImageUrl] = useState<string>('');
   const [imageModelUsed, setImageModelUsed] = useState<string>('');
   const [imageSubstitutedModel, setImageSubstitutedModel] = useState<string | undefined>();
+  const [imageInstruction, setImageInstruction] = useState<string>('');
 
   // Light Edit Pass
   const [headlineText, setHeadlineText] = useState<string>('');
@@ -187,7 +188,10 @@ export const GenerationWizard: React.FC<GenerationWizardProps> = ({
     if (step < 3) setStep(3);
 
     try {
-      const promptToUse = `${selectedTemplate?.promptSkeleton || topicInput || 'Veterinary care & pet wellness'}. Headline: "${headlineText || topicInput || brandKit.clinicName}"`;
+      let promptToUse = `${selectedTemplate?.promptSkeleton || topicInput || 'Veterinary care & pet wellness'}. Headline: "${headlineText || topicInput || brandKit.clinicName}"`;
+      if (imageInstruction.trim()) {
+        promptToUse += `. Zákazníkove požiadavky na úpravu: ${imageInstruction.trim()}`;
+      }
 
       const res = await fetch('/api/generate-image', {
         method: 'POST',
@@ -272,7 +276,7 @@ export const GenerationWizard: React.FC<GenerationWizardProps> = ({
             </h2>
           </div>
           <button
-            onClick={onZrušiť}
+            onClick={onCancel}
             className="text-xs font-semibold text-gray-500 hover:text-stone-800 cursor-pointer"
           >
             Zrušiť & Exit
@@ -314,15 +318,15 @@ export const GenerationWizard: React.FC<GenerationWizardProps> = ({
       {step === 1 && (
         <div className="p-6 sm:p-8 space-y-6 max-w-3xl mx-auto">
           <div className="space-y-1">
-            <h3 className="text-lg font-bold text-[#2D3748]">Step 1: Choose Template & Details</h3>
+            <h3 className="text-lg font-bold text-[#2D3748]">Krok 1: Výber Šablóny & Detaily</h3>
             <p className="text-xs text-gray-500">
-              Select a pre-designed veterinary template or start freeform.
+              Vyberte si predpripravenú veterinárnu šablónu alebo začnite voľným zadaním.
             </p>
           </div>
 
           {/* Template Selector Dropdown */}
           <div className="space-y-2">
-            <label className="text-xs font-bold text-[#2D3748]">Template Selection</label>
+            <label className="text-xs font-bold text-[#2D3748]">Výber šablóny</label>
             <select
               value={selectedTemplate?.id || 'freeform'}
               onChange={e => {
@@ -339,7 +343,7 @@ export const GenerationWizard: React.FC<GenerationWizardProps> = ({
               }}
               className="w-full p-3 bg-[#F5F1EB] border border-[#E8E1D5] rounded-xl text-xs font-semibold focus:ring-2 focus:ring-teal-500 focus:bg-white"
             >
-              <option value="freeform">✨ Freeform (No Template - Custom Prompt)</option>
+              <option value="freeform">✨ Voľné zadanie (Bez šablóny - Vlastný prompt)</option>
               {templates
                 .filter(t => !t.isStub)
                 .map(t => (
@@ -353,11 +357,11 @@ export const GenerationWizard: React.FC<GenerationWizardProps> = ({
           {/* Topic / Context Input */}
           <div className="space-y-2">
             <label className="text-xs font-bold text-[#2D3748]">
-              {selectedTemplate?.name ? `Topic for "${selectedTemplate.name}"` : 'Topic or Key Message'}
+              {selectedTemplate?.name ? `Téma pre "${selectedTemplate.name}"` : 'Téma alebo hlavná myšlienka'}
             </label>
             <input
               type="text"
-              placeholder="e.g. Flea & Tick Prevention, Senior Pet Wellness, Dr. Lin's 5th Anniversary"
+              placeholder="Napr. Prevencia proti blchám a kliešťom, Wellness pre seniorov, 5. výročie MVDr. Sýkoru"
               value={topicInput}
               onChange={e => setTopicInput(e.target.value)}
               className="w-full p-3 bg-[#F5F1EB] border border-[#E8E1D5] rounded-xl text-xs font-medium focus:ring-2 focus:ring-teal-500 focus:bg-white"
@@ -389,7 +393,7 @@ export const GenerationWizard: React.FC<GenerationWizardProps> = ({
                 <div>
                   <h4 className="text-xs font-bold text-amber-900">Vyžaduje sa súhlas klienta</h4>
                   <p className="text-[11px] text-amber-800 leading-relaxed mt-0.5">
-                    This post features a client's pet or personal story. Practice guardrails require explicit client consent before releasing or scheduling.
+                    Tento príspevok obsahuje fotografiu pacienta alebo osobný príbeh. Ochranné pravidlá kliniky vyžadujú výslovný súhlas klienta pred zverejnením alebo naplánovaním.
                   </p>
                 </div>
               </div>
@@ -401,7 +405,7 @@ export const GenerationWizard: React.FC<GenerationWizardProps> = ({
                   className="w-4 h-4 text-[#3D8D95] rounded border-[#E8E1D5] focus:ring-teal-500"
                 />
                 <span className="text-xs font-bold text-amber-950">
-                  I confirm we have the client's consent to use this photo/story
+                  Potvrdzujem, že máme súhlas klienta na použitie tejto fotografie/príbehu
                 </span>
               </label>
             </div>
@@ -443,14 +447,14 @@ export const GenerationWizard: React.FC<GenerationWizardProps> = ({
           <div className="bg-[#F5F1EB] p-4 rounded-xl border border-[#E8E1D5] space-y-2">
             <h4 className="text-xs font-bold text-[#2D3748] flex items-center gap-1.5">
               <Stethoscope className="w-4 h-4 text-[#3D8D95]" />
-              Applied Brand Voice & Guardrails
+              Aplikovaný Hlas Značky & Ochranné Pravidlá
             </h4>
             <div className="text-[11px] text-gray-500 space-y-1">
               <p>
-                <strong>Tone:</strong> {brandKit.toneOfVoice}
+                <strong>Tón:</strong> {brandKit.toneOfVoice}
               </p>
               <p>
-                <strong>Disclaimer Attached:</strong> "{brandKit.disclaimerText}"
+                <strong>Priložené Upozornenie:</strong> "{brandKit.disclaimerText}"
               </p>
             </div>
           </div>
@@ -461,7 +465,7 @@ export const GenerationWizard: React.FC<GenerationWizardProps> = ({
               className="bg-[#3D8D95] hover:bg-[#347A81] text-white font-bold px-6 py-3 rounded-xl shadow-sm text-xs flex items-center gap-2 transition-all cursor-pointer"
             >
               <Wand2 className="w-4 h-4 text-amber-300" />
-              Generate Copy & Značky (Hashtags) <ArrowRight className="w-4 h-4" />
+              Generovať text & Značky (Hashtags) <ArrowRight className="w-4 h-4" />
             </button>
           </div>
         </div>
@@ -472,9 +476,9 @@ export const GenerationWizard: React.FC<GenerationWizardProps> = ({
         <div className="p-6 sm:p-8 space-y-6 max-w-4xl mx-auto">
           <div className="flex items-center justify-between border-b border-[#F5F1EB] pb-3">
             <div>
-              <h3 className="text-lg font-bold text-[#2D3748]">Step 2: AI Caption Variants & Značky (Hashtags)</h3>
+              <h3 className="text-lg font-bold text-[#2D3748]">Krok 2: AI Varianty Textu & Značky (Hashtags)</h3>
               <p className="text-xs text-gray-500">
-                Generated with clinical guardrails (Gemini Model: {copyModelUsed}). Select or edit your favorite.
+                Vygenerované s klinickými pravidlami (Model: {copyModelUsed}). Vyberte alebo upravte ten najlepší.
               </p>
             </div>
             {copySubstitutedModel && (
@@ -636,9 +640,9 @@ export const GenerationWizard: React.FC<GenerationWizardProps> = ({
         <div className="p-6 sm:p-8 space-y-6 max-w-4xl mx-auto">
           <div className="flex items-center justify-between border-b border-[#F5F1EB] pb-3">
             <div>
-              <h3 className="text-lg font-bold text-[#2D3748]">Step 3: Generate Branded Visual</h3>
+              <h3 className="text-lg font-bold text-[#2D3748]">Krok 3: Generovanie vizuálu (AI Media Creator)</h3>
               <p className="text-xs text-gray-500">
-                Generate high-impact image visuals tailored to social aspect ratios.
+                Vygenerujte pútavý obrázok vo zvolenom pomere strán so zachovaním identity značky.
               </p>
             </div>
             {imageModelUsed && (
@@ -655,10 +659,10 @@ export const GenerationWizard: React.FC<GenerationWizardProps> = ({
                 <label className="text-xs font-bold text-[#2D3748]">Pomer strán</label>
                 <div className="grid grid-cols-2 gap-2">
                   {[
-                    { ratio: '1:1', label: '1:1 Square (IG/FB)' },
-                    { ratio: '4:5', label: '4:5 Portrait (IG Feed)' },
-                    { ratio: '16:9', label: '16:9 Landscape (FB/GBP)' },
-                    { ratio: '9:16', label: '9:16 Story/Reels' }
+                    { ratio: '1:1', label: '1:1 Štvorec' },
+                    { ratio: '4:5', label: '4:5 Portrét' },
+                    { ratio: '16:9', label: '16:9 Krajinka' },
+                    { ratio: '9:16', label: '9:16 Príbeh/Reel' }
                   ].map(item => (
                     <button
                       key={item.ratio}
@@ -678,13 +682,25 @@ export const GenerationWizard: React.FC<GenerationWizardProps> = ({
                 </div>
               </div>
 
+              {/* Vlastný prompt pre obrázok */}
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-[#2D3748]">Vlastné pokyny (Prompt)</label>
+                <textarea
+                  rows={3}
+                  placeholder="Napr. Pridaj do pozadia kliniku, zmeň farbu obojku na zelenú..."
+                  value={imageInstruction}
+                  onChange={e => setImageInstruction(e.target.value)}
+                  className="w-full p-2.5 bg-white border border-[#E8E1D5] rounded-xl text-xs font-medium focus:ring-2 focus:ring-teal-500"
+                />
+              </div>
+
               <div className="space-y-2">
                 <label className="text-xs font-bold text-[#2D3748]">Model Tier</label>
                 <div className="space-y-1.5">
                   {[
-                    { id: 'standard', name: 'Standard (gemini-3.1-flash-image)' },
-                    { id: 'hifi', name: 'Hi-Fi Text Graphics (gemini-3-pro-image)' },
-                    { id: 'fast', name: 'Fast Preview (gemini-3.1-flash-lite)' }
+                    { id: 'standard', name: 'Štandardný' },
+                    { id: 'hifi', name: 'Hi-Fi Text Grafika' },
+                    { id: 'fast', name: 'Rýchly náhľad' }
                   ].map(t => (
                     <label key={t.id} className="flex items-center gap-2 cursor-pointer text-xs text-[#2D3748]">
                       <input
@@ -707,7 +723,7 @@ export const GenerationWizard: React.FC<GenerationWizardProps> = ({
                 className="w-full bg-stone-800 hover:bg-stone-900 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 cursor-pointer"
               >
                 <RefreshCw className={`w-3.5 h-3.5 ${isGeneratingImage ? 'animate-spin' : ''}`} />
-                Regenerate Visual
+                Prekresliť Vizuál
               </button>
             </div>
 
@@ -717,16 +733,16 @@ export const GenerationWizard: React.FC<GenerationWizardProps> = ({
                 {isGeneratingImage ? (
                   <div className="text-center p-8 space-y-3">
                     <RefreshCw className="w-8 h-8 text-[#3D8D95] animate-spin mx-auto" />
-                    <p className="text-sm font-bold text-[#2D3748]">Rendering Branded Visual...</p>
+                    <p className="text-sm font-bold text-[#2D3748]">Generujem vizuál...</p>
                   </div>
                 ) : generatedImageUrl ? (
                   <img
                     src={generatedImageUrl}
-                    alt="Generated post visual"
+                    alt="Vygenerovaný vizuál"
                     className="w-full h-auto max-h-[420px] object-contain mx-auto"
                   />
                 ) : (
-                  <p className="text-xs text-gray-400">Click Generate to create visual</p>
+                  <p className="text-xs text-gray-400">Kliknite na Prekresliť pre generovanie obrázku</p>
                 )}
               </div>
             </div>
@@ -737,7 +753,7 @@ export const GenerationWizard: React.FC<GenerationWizardProps> = ({
               onClick={() => setStep(2)}
               className="bg-[#FAF8F5] hover:bg-[#E8E1D5] text-[#2D3748] font-semibold px-4 py-2.5 rounded-xl text-xs flex items-center gap-1.5 cursor-pointer"
             >
-              <ArrowLeft className="w-4 h-4" /> Späť to Copy
+              <ArrowLeft className="w-4 h-4" /> Späť na Texty
             </button>
 
             <button
@@ -745,7 +761,7 @@ export const GenerationWizard: React.FC<GenerationWizardProps> = ({
               className="bg-[#3D8D95] hover:bg-[#347A81] text-white font-bold px-6 py-2.5 rounded-xl text-xs flex items-center gap-2 cursor-pointer shadow-sm"
             >
               <Edit3 className="w-4 h-4 text-amber-300" />
-              Light Edit Pass <ArrowRight className="w-4 h-4" />
+              Ľahká úprava (Light Edit) <ArrowRight className="w-4 h-4" />
             </button>
           </div>
         </div>

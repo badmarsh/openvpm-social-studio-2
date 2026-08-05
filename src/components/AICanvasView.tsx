@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { CanvasDocument, CanvasTemplate, BrandKit, UserRole } from '../types';
 import { 
   FileText, Sparkles, Download, CheckCircle2, Tag, BookOpen, 
-  Plus, Trash2, Languages, ShieldCheck, Save, Edit3, AlignLeft, Bold, Italic
+  Plus, Trash2, Languages, ShieldCheck, Save, Edit3, AlignLeft, Bold, Italic, Upload
 } from 'lucide-react';
 import { useToast } from '../context/ToastContext';
 import { useEditor, EditorContent } from '@tiptap/react';
@@ -10,7 +10,7 @@ import StarterKit from '@tiptap/starter-kit';
 import { TextStyle } from '@tiptap/extension-text-style';
 import { Color } from '@tiptap/extension-color';
 import { MermaidExtension } from '../extensions/MermaidExtension';
-import { parseHTML } from 'marked';
+import { marked } from 'marked';
 
 interface AICanvasViewProps {
   brandKit: BrandKit;
@@ -193,6 +193,11 @@ export const AICanvasView: React.FC<AICanvasViewProps> = ({ brandKit, role }) =>
           <p className="text-sm text-stone-500 font-medium mt-1">Smart Word Procesor pre Klinické Dokumenty</p>
         </div>
         <div className="flex gap-2">
+          <label className="bg-[#FAF8F5] hover:bg-[#E8E1D5] text-[#2D3748] border border-[#E8E1D5] px-5 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 cursor-pointer transition-colors shadow-xs">
+            <Upload className="w-4 h-4" />
+            Nahrať PDF
+            <input type="file" accept=".pdf" className="hidden" onChange={(e) => showToast('Pripravuje sa', 'Nahrávanie PDF bude dostupné v ďalšej verzii.')} />
+          </label>
           <button onClick={() => setShowTemplateModal(true)} className="bg-[#134027] hover:bg-teal-900 text-white px-5 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 cursor-pointer transition-colors shadow-xs">
             <Plus className="w-4 h-4 text-[#D4AF37]" />
             Nový Dokument

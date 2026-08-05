@@ -16,6 +16,7 @@ interface CalendarViewProps {
   onViewPost: (post: Post) => void;
   onStartWizard: () => void;
   onReschedulePost: (postId: string, newDate: string) => void;
+  onAddGeneratedPosts: (posts: Post[]) => void;
 }
 
 export const CalendarView: React.FC<CalendarViewProps> = ({
@@ -23,11 +24,13 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
   brandKit,
   onViewPost,
   onStartWizard,
-  onReschedulePost
+  onReschedulePost,
+  onAddGeneratedPosts
 }) => {
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
   const [viewMode, setViewMode] = useState<'month' | 'week'>('month');
   const [filterStatus, setFilterStatus] = useState<string>('all');
+  const [generating, setGenerating] = useState(false);
 
   // Month Math
   const year = currentDate.getFullYear();
@@ -51,6 +54,50 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
 
   const handleToday = () => {
     setCurrentDate(new Date());
+  };
+
+  const handleGeneratePlan = async () => {
+    setGenerating(true);
+    try {
+      const res = await fetch('/api/generate-calendar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          brandKit,
+          startDate: new Date().toISOString()
+        })
+      });
+      const data = await res.json();
+      if (data.success && data.plan) {
+        const newPosts: Post[] = data.plan.map((item: any, i: number) => {
+          const d = new Date();
+          d.setDate(d.getDate() + item.dayOffset);
+          const dateStr = d.toISOString().split('T')[0];
+          
+          return {
+            id: 'auto-' + Date.now() + '-' + i,
+            platforms: ['IG'],
+            scheduledDate: dateStr,
+            scheduledTime: '10:00',
+            status: 'draft',
+            variants: {
+              IG: {
+                caption: item.caption,
+                hashtags: item.hashtags,
+                altText: 'Automaticky generovaný obrázok'
+              }
+            },
+            assetUrl: null,
+            templateName: item.category
+          };
+        });
+        onAddGeneratedPosts(newPosts);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setGenerating(false);
+    }
   };
 
   // Group posts by YYYY-MM-DD
@@ -214,12 +261,21 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
             </select>
           </div>
 
-          <button
-            onClick={onStartWizard}
-            className="bg-[#3D8D95] hover:bg-[#347A81] text-white text-xs font-bold px-4 py-2 rounded-xl flex items-center gap-1.5 transition-all shadow-sm cursor-pointer"
-          >
-            <Plus className="w-4 h-4" /> Schedule Post
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleGeneratePlan}
+              disabled={generating}
+              className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2 rounded-xl flex items-center gap-1.5 transition-all shadow-sm cursor-pointer disabled:opacity-50"
+            >
+              {generating ? 'Generujem...' : '✨ Auto-Plan 30 Dní'}
+            </button>
+            <button
+              onClick={onStartWizard}
+              className="bg-[#3D8D95] hover:bg-[#347A81] text-white text-xs font-bold px-4 py-2 rounded-xl flex items-center gap-1.5 transition-all shadow-sm cursor-pointer"
+            >
+              <Plus className="w-4 h-4" /> Schedule Post
+            </button>
+          </div>
         </div>
       </div>
 

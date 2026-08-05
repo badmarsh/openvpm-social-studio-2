@@ -32,12 +32,12 @@ export const AutomationDashboard: React.FC = () => {
     }
   };
 
-  const fireMockWebhook = async (event: string, clientId: string) => {
+  const fireMockWebhook = async (event: string, clientId: string, metadata?: any) => {
     try {
       await fetch('/api/webhooks/openvpm', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ event, clientId, eventData: { test: true } })
+        body: JSON.stringify({ event, clientId, metadata: metadata || {} })
       });
       alert(`Fired mock webhook for ${event}`);
     } catch (err) {
@@ -65,15 +65,18 @@ export const AutomationDashboard: React.FC = () => {
             Spravujte OpenVPM spúšťače a AI generované follow-upy.
           </p>
         </div>
-        <div className="flex gap-2">
-          <button onClick={() => fireMockWebhook('visit_completed', 'c1')} className="text-xs bg-blue-100 text-blue-700 font-bold px-3 py-1.5 rounded-lg border border-blue-200 hover:bg-blue-200">
-            Mock: Návšteva ukončená (Ján)
+        <div className="flex gap-2 flex-wrap justify-end">
+          <button onClick={() => fireMockWebhook('appointment.completed', 'c1', { serviceType: 'surgery' })} className="text-[10px] bg-blue-100 text-blue-700 font-bold px-3 py-1.5 rounded-lg border border-blue-200 hover:bg-blue-200">
+            Mock: Surgery Discharge (Ján)
           </button>
-          <button onClick={() => fireMockWebhook('appointment_no_show', 'c2')} className="text-xs bg-amber-100 text-amber-700 font-bold px-3 py-1.5 rounded-lg border border-amber-200 hover:bg-amber-200">
-            Mock: Nedostavenie sa (Anna)
+          <button onClick={() => fireMockWebhook('appointment.completed', 'c3', { serviceType: 'vaccination_puppy' })} className="text-[10px] bg-emerald-100 text-emerald-700 font-bold px-3 py-1.5 rounded-lg border border-emerald-200 hover:bg-emerald-200">
+            Mock: Puppy Vax + Upsell (Peter)
           </button>
-          <button onClick={() => fireMockWebhook('payment_failed', 'c3')} className="text-xs bg-rose-100 text-rose-700 font-bold px-3 py-1.5 rounded-lg border border-rose-200 hover:bg-rose-200">
-            Mock: Zlyhanie platby (Peter)
+          <button onClick={() => fireMockWebhook('appointment.no_show', 'c2')} className="text-[10px] bg-amber-100 text-amber-700 font-bold px-3 py-1.5 rounded-lg border border-amber-200 hover:bg-amber-200">
+            Mock: No-Show (Anna)
+          </button>
+          <button onClick={() => fireMockWebhook('instagram.dm', 'c4', { message: 'Koľko stojí kastrácia?' })} className="text-[10px] bg-purple-100 text-purple-700 font-bold px-3 py-1.5 rounded-lg border border-purple-200 hover:bg-purple-200">
+            Mock: IG DM (Cena)
           </button>
         </div>
       </div>

@@ -8,6 +8,7 @@ export const CompetitorAnalysisView: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [analysis, setAnalysis] = useState('');
   const [sources, setSources] = useState<string[]>([]);
+  const [isMonitoring, setIsMonitoring] = useState(false);
   const { showToast } = useToast();
 
   const handleAnalyze = async () => {
@@ -81,13 +82,30 @@ export const CompetitorAnalysisView: React.FC = () => {
 
         {analysis && !loading && (
           <div className="pt-6 border-t border-[#E8E1D5]">
-            <div className="flex items-center gap-2 mb-4">
-              <Sparkles className="w-5 h-5 text-[#D4AF37]" />
-              <h3 className="text-lg font-bold text-[#2D3748]">Strategická Analýza</h3>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-[#D4AF37]" />
+                <h3 className="text-lg font-bold text-[#2D3748]">Strategická Analýza</h3>
+              </div>
+              <label className="flex items-center gap-2 cursor-pointer bg-[#FAF8F5] p-2 rounded-lg border border-[#E8E1D5]">
+                <input 
+                  type="checkbox" 
+                  checked={isMonitoring} 
+                  onChange={(e) => {
+                    setIsMonitoring(e.target.checked);
+                    showToast(
+                      e.target.checked ? 'Monitoring zapnutý' : 'Monitoring vypnutý',
+                      e.target.checked ? 'Budete dostávať týždenné upozornenia o zmenách konkurencie.' : 'Priebežný monitoring bol pozastavený.'
+                    );
+                  }}
+                  className="w-4 h-4 text-[#134027] rounded focus:ring-[#134027]" 
+                />
+                <span className="text-xs font-bold text-[#2D3748]">Priebežný monitoring (Týždenný report)</span>
+              </label>
             </div>
             
             <div className="prose prose-sm max-w-none text-stone-700 bg-[#FAF8F5] p-6 rounded-2xl border border-[#E8E1D5]"
-                 dangerouslySetInnerHTML={{ __html: marked(analysis) }} />
+                 dangerouslySetInnerHTML={{ __html: marked(analysis) as string }} />
 
             {sources.length > 0 && (
               <div className="mt-6">

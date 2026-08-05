@@ -27,11 +27,12 @@ import { AutomationDashboard } from './components/AutomationDashboard';
 import { ClientCRMView } from './components/ClientCRMView';
 import { ReviewsView } from './components/ReviewsView';
 import { AICanvasView } from './components/AICanvasView';
-import { AIMediaCreator } from './components/AIMediaCreator';
 import { AIScribeView } from './components/AIScribeView';
 import { CompetitorAnalysisView } from './components/CompetitorAnalysisView';
 import { TelemedicineView } from './components/TelemedicineView';
 import { ChatbotView } from './components/ChatbotView';
+import { InnovationsView } from './components/InnovationsView';
+import { SuppliersView } from './components/SuppliersView';
 import { PostDetailModal } from './components/PostDetailModal';
 import { ToastProvider, useToast } from './context/ToastContext';
 
@@ -221,11 +222,11 @@ function AppContent() {
             onViewPost={post => setSelectedPost(post)}
             onStartWizard={() => handleStartWizard()}
             onReschedulePost={handleReschedulePost}
+            onAddGeneratedPosts={newPosts => setPosts(prev => [...prev, ...newPosts])}
           />
         )}
 
         {currentTab === 'canvas' && <AICanvasView brandKit={brandKit} role={role} />}
-        {currentTab === 'media' && <AIMediaCreator brandKit={brandKit} />}
         {currentTab === 'scribe' && <AIScribeView />}
         {currentTab === 'competitor-analysis' && <CompetitorAnalysisView />}
         {currentTab === 'telemedicine' && <TelemedicineView />}
@@ -233,6 +234,8 @@ function AppContent() {
         {currentTab === 'crm' && <ClientCRMView />}
         {currentTab === 'reviews' && <ReviewsView />}
         {currentTab === 'automations' && <AutomationDashboard />}
+        {currentTab === 'innovations' && <InnovationsView />}
+        {currentTab === 'suppliers' && <SuppliersView />}
         {currentTab === 'brandkit' && (
           <BrandKitView brandKit={brandKit} onSaveBrandKit={handleSaveBrandKit} />
         )}

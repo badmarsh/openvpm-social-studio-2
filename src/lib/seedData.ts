@@ -4,362 +4,362 @@ export const DEFAULT_PRACTICE_ID = 'practice_oakwood_vet';
 
 export const DEFAULT_BRAND_KIT: BrandKit = {
   practiceId: DEFAULT_PRACTICE_ID,
-  clinicName: 'Oakwood Veterinary Hospital & Wellness Center',
+  clinicName: 'Veterinárny lekár MVDr. Martin Sýkora',
   logoUrl: 'https://images.unsplash.com/photo-1576201836106-db1758fd1c97?auto=format&fit=crop&w=200&q=80',
   primaryColor: '#0d9488', // Teal 600
   secondaryColor: '#f5f5f4', // Sand neutral
   fontStyle: 'warm',
-  toneOfVoice: 'Compassionate, clear, reassuring, community-minded, and easy for any pet owner to understand.',
+  toneOfVoice: 'Súcitný, jasný, upokojujúci, komunitne orientovaný a ľahko pochopiteľný pre každého majiteľa zvieratka.',
   services: [
-    'Wellness & Preventive Care',
-    'Comprehensive Dental Care',
-    'Routine & Advanced Surgery',
-    'In-House Diagnostics & Digital X-Ray',
-    'Senior Pet Care Management',
-    'Microchipping & Vaccinations'
+    'Wellness & Preventívna starostlivosť',
+    'Komplexná dentálna starostlivosť',
+    'Bežná a pokročilá chirurgia',
+    'Interná diagnostika a digitálny RTG',
+    'Starostlivosť o staršie zvieratá',
+    'Čipovanie a vakcinácia'
   ],
   teamMembers: [
     {
       id: 'tm_1',
-      name: 'Dr. Sarah Lin, DVM',
-      role: 'Medical Director',
+      name: 'MVDr. Martin Sýkora',
+      role: 'Veterinárny lekár',
       photoUrl: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=300&q=80'
     },
     {
       id: 'tm_2',
-      name: 'Marcus Vance, LVT',
-      role: 'Lead Veterinary Technician',
+      name: 'Ján Novák',
+      role: 'Veterinárny technik',
       photoUrl: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=300&q=80'
     },
     {
       id: 'tm_3',
-      name: 'Elena Rostova',
-      role: 'Client Care Coordinator',
+      name: 'Mária Kováčová',
+      role: 'Koordinátorka',
       photoUrl: 'https://images.unsplash.com/photo-1582750433449-648ed127bb54?auto=format&fit=crop&w=300&q=80'
     }
   ],
-  address: '1420 Oakwood Valley Way, Suite 100, Austin, TX 78745',
-  phone: '(512) 555-0198',
-  website: 'www.oakwoodvetclinic.com',
-  disclaimerText: 'For general pet wellness awareness only. Always consult our veterinary team directly for personalized medical evaluations or emergency triage.'
+  address: 'Kvetná 3, Rimavská Sobota, Slovakia',
+  phone: '0903 949 401',
+  website: 'https://www.facebook.com/profile.php?id=100064552757713',
+  disclaimerText: 'Len pre všeobecné informácie o zdraví zvierat. Vždy sa priamo poraďte s naším veterinárnym tímom pre personalizované lekárske hodnotenie alebo urgentnú triáž.'
 };
 
 export const SEED_TEMPLATES: Template[] = [
   // Preventive Care & Wellness
   {
     id: 'tpl_vaccine_reminder',
-    category: 'Preventive Care & Wellness',
-    name: 'Vaccine/Parasite Reminder',
-    description: 'Friendly callout for a specific overdue care topic with light urgency and a call-to-book CTA.',
+    category: 'Preventívna starostlivosť & Wellness',
+    name: 'Pripomienka Očkovania/Odčervenia',
+    description: 'Priateľská pripomienka pre špecifickú zanedbanú starostlivosť s miernou urgenciou a CTA na objednanie.',
     platforms: ['IG', 'FB', 'GBP'],
     aspectRatios: ['1:1', '4:5'],
     mediaType: 'image',
     imageUrl: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=400&q=80',
-    promptSkeleton: 'A warm graphic reminding pet owners about {{topic}} (e.g. Heartworm/Flea/Rabies protection). Warm teal and soft sand background, featuring a happy healthy dog and cat.',
-    exampleCaption: 'Is your pet up to date on heartworm and flea prevention? Protecting your furry family members is easiest when done regularly. Give us a call or book online to check their wellness schedule!'
+    promptSkeleton: 'Príjemná grafika pripomínajúca majiteľom zvierat {{topic}} (napr. ochrana proti blchám/kliešťom). Teplé modrozelené a pieskové pozadie, usmievavý zdravý pes a mačka.',
+    exampleCaption: 'Je váš miláčik chránený proti blchám a kliešťom na túto sezónu? Ochrana vašich chlpatých členov rodiny je najjednoduchšia, ak sa robí pravidelne. Zavolajte nám alebo sa objednajte online a skontrolujeme plán prevencie!'
   },
   {
     id: 'tpl_wellness_plan',
-    category: 'Preventive Care & Wellness',
-    name: 'Wellness Plan Spotlight',
-    description: 'Explain one wellness plan benefit in plain language without inventing prices.',
+    category: 'Preventívna starostlivosť & Wellness',
+    name: 'Zvýraznenie Wellness Plánu',
+    description: 'Vysvetlenie jednej výhody wellness plánu jednoduchým jazykom bez vymýšľania cien.',
     platforms: ['IG', 'FB'],
     aspectRatios: ['1:1', '4:5'],
     mediaType: 'image',
     imageUrl: 'https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def?auto=format&fit=crop&w=400&q=80',
-    promptSkeleton: 'An inviting graphic highlighting {{benefit}} (e.g. complimentary dental checks or annual bloodwork) as part of custom pet wellness care.',
-    exampleCaption: 'Our comprehensive wellness plans include routine preventative checkups and early health screenings so your pet enjoys a happy, active life. [[insert plan details]]'
+    promptSkeleton: 'Pozývajúca grafika zdôrazňujúca {{benefit}} (napr. preventívna dentálna prehliadka alebo ročný krvný obraz) ako súčasť plánu preventívnej starostlivosti.',
+    exampleCaption: 'Naše komplexné Wellness plány zahŕňajú rutinné preventívne prehliadky a včasné zdravotné vyšetrenia, aby váš miláčik mal šťastný a aktívny život. [[vložte detaily plánu]]'
   },
   {
     id: 'tpl_senior_pet',
-    category: 'Preventive Care & Wellness',
-    name: 'Senior Pet Checkup Nudge',
-    description: 'Warm, non-alarming reminder that senior pets benefit from twice-yearly checkups.',
+    category: 'Preventívna starostlivosť & Wellness',
+    name: 'Pripomienka Prehliadky Pre Seniorov',
+    description: 'Teplá, nealarmujúca pripomienka, že starším zvieratkám prospievajú prehliadky dvakrát ročne.',
     platforms: ['IG', 'FB', 'GBP'],
     aspectRatios: ['1:1', '4:5', '16:9'],
     mediaType: 'image',
     imageUrl: 'https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?auto=format&fit=crop&w=400&q=80',
-    promptSkeleton: 'A gentle image of a loving senior Golden Retriever or tabby cat resting comfortably next to an attentive vet staff member.',
-    exampleCaption: 'Pets age faster than we do! Senior pets (7+ years) thrive with bi-annual wellness exams to catch subtle changes early. Schedule a cozy checkup with our team today.'
+    promptSkeleton: 'Jemný obrázok milujúceho staršieho Zlatého retrievera alebo mačky pohodlne odpočívajúcej vedľa pozorného člena veterinárneho personálu.',
+    exampleCaption: 'Zvieratká starnú rýchlejšie ako my! Starším pacientom (7+ rokov) prospievajú preventívne prehliadky dvakrát ročne, aby sme včas zachytili aj nenápadné zmeny. Naplánujte si s nami vyšetrenie bez stresu ešte dnes.'
   },
 
   // Educational
   {
     id: 'tpl_did_you_know',
-    category: 'Educational',
-    name: 'Did You Know?',
-    description: 'One true, non-diagnostic pet-health fact, framed as "ask your vet," not definitive advice.',
+    category: 'Edukačné',
+    name: 'Vedeli ste, že?',
+    description: 'Jeden pravdivý, nediagnostický fakt o zdraví zvierat, formulovaný ako "spýtajte sa svojho veterinára", nie ako definitívna rada.',
     platforms: ['IG', 'FB'],
     aspectRatios: ['1:1', '4:5', '16:9'],
     mediaType: 'image',
     imageUrl: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=400&q=80',
-    promptSkeleton: 'An educational quote card graphic asking "Did You Know?" regarding {{factTopic}} with a playful paw illustration.',
-    exampleCaption: 'Did you know cats are masters at masking discomfort? Regular gentle exams help us keep tabs on their joint health and hydration. Have questions? Ask our veterinary team at your next visit!'
+    promptSkeleton: 'Edukačná grafika s otázkou "Vedeli ste, že?" ohľadom {{factTopic}} s hravou ilustráciou labky.',
+    exampleCaption: 'Vedeli ste, že mačky sú majstri v maskovaní nepohodlia? Pravidelné a jemné prehliadky nám pomáhajú sledovať ich zdravie kĺbov a hydratáciu. Máte otázky? Opýtajte sa nášho tímu pri vašej ďalšej návšteve!'
   },
   {
     id: 'tpl_myth_vs_fact',
-    category: 'Educational',
-    name: 'Myth vs. Fact',
-    description: 'A common pet-care myth followed by an accurate, non-alarming correction.',
+    category: 'Edukačné',
+    name: 'Mýtus vs. Fakt',
+    description: 'Bežný mýtus o starostlivosti o zvieratá nasledovaný presnou, nealarmujúcou korekciou.',
     platforms: ['IG', 'FB'],
     aspectRatios: ['1:1', '4:5', '16:9'],
     mediaType: 'image',
     imageUrl: 'https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=400&q=80',
-    promptSkeleton: 'A 2-panel comparison graphic side-by-side: MYTH: {{mythText}} | FACT: {{factText}}. Clean layout with teal headers.',
+    promptSkeleton: 'Dvojdielna porovnávacia grafika vedľa seba: MÝTUS: {{mythText}} | FAKT: {{factText}}. Čisté rozloženie s tyrkysovými hlavičkami.',
     exampleCaption: 'MYTH: Dogs with warm, dry noses are always sick.\n\nFACT: A dog’s nose temperature fluctuates naturally throughout the day! Always look at activity level and appetite instead, and call us if you ever feel unsure.'
   },
   {
     id: 'tpl_when_to_call',
-    category: 'Educational',
-    name: 'When to Call Us',
-    description: 'Non-diagnostic checklist of symptoms that warrant a call — explicitly not a medical diagnosis.',
+    category: 'Edukačné',
+    name: 'Kedy nám zavolať',
+    description: 'Nediagnostický kontrolný zoznam symptómov, ktoré vyžadujú telefonát — vyslovene to nie je lekárska diagnóza.',
     platforms: ['IG', 'FB'],
     aspectRatios: ['1:1', '4:5', '16:9'],
     mediaType: 'image',
     imageUrl: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=400&q=80',
-    promptSkeleton: 'A clean checklist graphic titled "When To Give Our Clinic A Call" listing key wellness indicators.',
+    promptSkeleton: 'Čistá grafika so zoznamom nazvaným "Kedy by ste mali zavolať do našej ambulancie" uvádzajúca kľúčové indikátory zdravia.',
     exampleCaption: 'Not sure if your pet needs to be seen? Here are 4 signs it is time for a quick checkup:\n• Changes in drinking or eating habits\n• Persistent coughing or lethargy\n• Sudden mobility changes\n• Unexplained hiding behavior'
   },
   {
     id: 'tpl_seasonal_hazard',
-    category: 'Educational',
-    name: 'Seasonal Hazard Tip',
-    description: 'Seasonal-hazard awareness plus a practical prevention tip.',
+    category: 'Edukačné',
+    name: 'Sezónne Nástrahy',
+    description: 'Upozornenie na sezónne nástrahy a praktický tip na prevenciu.',
     platforms: ['IG', 'FB', 'GBP'],
     aspectRatios: ['1:1', '4:5', '16:9'],
     mediaType: 'image',
     imageUrl: 'https://images.unsplash.com/photo-1534361960057-19889db9621e?auto=format&fit=crop&w=400&q=80',
-    promptSkeleton: 'A seasonal graphic highlighting safety tips regarding {{seasonOrHazard}} (e.g. summer heat paw protection or holiday plant hazards).',
-    exampleCaption: 'As temperatures rise, pavement gets hot fast! Test the sidewalk with the back of your hand for 7 seconds. If it is too hot for you, it is too hot for your pup’s paws.'
+    promptSkeleton: 'Sezónna grafika zdôrazňujúca bezpečnostné tipy týkajúce sa {{seasonOrHazard}} (napr. letné horúčavy, ochrana labiek alebo sviatočné jedovaté rastliny).',
+    exampleCaption: 'Ako teploty stúpajú, asfalt sa rýchlo zahrieva! Vyskúšajte teplotu chodníka chrbtom ruky na 7 sekúnd. Ak je to príliš horúce pre vás, je to príliš horúce pre labky vášho psa.'
   },
 
   // Practice & Team
   {
     id: 'tpl_meet_team',
-    category: 'Practice & Team',
-    name: 'Meet the Team',
-    description: 'Warm intro to a named staff member: role, fun fact, why they love vet med.',
+    category: 'Klinika & Tím',
+    name: 'Zoznámte sa s Tímom',
+    description: 'Vrelé predstavenie člena personálu: rola, zaujímavý fakt, prečo miluje veterinárnu medicínu.',
     platforms: ['IG', 'FB'],
     aspectRatios: ['1:1', '4:5'],
     mediaType: 'image',
     imageUrl: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=400&q=80',
-    promptSkeleton: 'A friendly staff spotlight card featuring {{memberName}}, {{role}}, with a soft warm background.',
-    exampleCaption: 'Meet {{memberName}}, our {{role}}! Fun fact: {{funFact}}. "My favorite part of working at {{clinicName}} is building lifelong bonds with our patients and making vet visits fear-free!"'
+    promptSkeleton: 'Priateľská vizitka zamestnanca s {{memberName}}, {{role}}, s jemným teplým pozadím.',
+    exampleCaption: 'Zoznámte sa s {{memberName}}, náš/naša {{role}}! Zaujímavosť: {{funFact}}. "Mojou najobľúbenejšou časťou práce v {{clinicName}} je budovanie celoživotných väzieb s našimi pacientmi a snaha robiť návštevy u veterinára bez strachu!"'
   },
   {
     id: 'tpl_day_in_life',
-    category: 'Practice & Team',
-    name: 'Day in the Life',
-    description: 'Upbeat behind-the-scenes montage feel, no graphic medical imagery.',
+    category: 'Klinika & Tím',
+    name: 'Deň v našej ambulancii',
+    description: 'Pozitívny zostrih zo zákulisia, žiadne grafické lekárske zábery.',
     platforms: ['IG', 'Reels'],
     aspectRatios: ['9:16', '1:1'],
     mediaType: 'video',
     imageUrl: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=400&q=80',
-    promptSkeleton: 'Behind the scenes montage clip showing morning prep, cozy treat stations, and team smiles.',
-    exampleCaption: 'Ever wondered what happens behind the scenes at {{clinicName}}? From morning patient belly rubs to organizing gentle recovery suites, our team puts heart into every moment.'
+    promptSkeleton: 'Zostrih zo zákulisia zobrazujúci ranné prípravy, miesta s pamlskami a úsmevy tímu.',
+    exampleCaption: 'Zaujímalo vás niekedy, čo sa deje za zatvorenými dverami v {{clinicName}}? Od ranného škrabkania pacientov až po organizovanie pohodlných priestorov na zotavenie, náš tím dáva srdce do každého okamihu.'
   },
   {
     id: 'tpl_new_service',
-    category: 'Practice & Team',
-    name: 'New Service Announcement',
-    description: 'Announce a new service or equipment in benefit-focused language.',
+    category: 'Klinika & Tím',
+    name: 'Nová služba v ambulancii',
+    description: 'Oznámenie o novej službe alebo vybavení so zameraním na výhody pre pacienta.',
     platforms: ['IG', 'FB', 'GBP'],
     aspectRatios: ['1:1', '4:5', '16:9'],
     mediaType: 'image',
     imageUrl: 'https://images.unsplash.com/photo-1584813470613-5b1c1cad3d69?auto=format&fit=crop&w=400&q=80',
-    promptSkeleton: 'An announcement graphic introducing {{serviceName}} with modern, gentle medical imagery.',
-    exampleCaption: 'We are thrilled to now offer {{serviceName}}! This allows our care team to evaluate your pet with even greater precision and comfort. Tap the link in bio or call us to learn more.'
+    promptSkeleton: 'Grafika oznamujúca novú službu {{serviceName}} s modernými, jemnými lekárskymi obrázkami.',
+    exampleCaption: 'Sme nadšení, že teraz môžeme ponúknuť {{serviceName}}! To umožňuje nášmu tímu vyšetriť vášho miláčika s ešte väčšou presnosťou a komfortom. Kliknite na odkaz v biu alebo nám zavolajte, ak sa chcete dozvedieť viac.'
   },
   {
     id: 'tpl_milestone',
-    category: 'Practice & Team',
-    name: 'Practice Milestone',
-    description: 'Celebrate an anniversary or community milestone with your clients.',
+    category: 'Klinika & Tím',
+    name: 'Výročie / Míľnik ambulancie',
+    description: 'Oslava výročia alebo komunitného míľnika s vašimi klientmi.',
     platforms: ['IG', 'FB'],
     aspectRatios: ['1:1', '4:5'],
     mediaType: 'image',
     imageUrl: 'https://images.unsplash.com/photo-1516453734593-8d198ae84bcf?auto=format&fit=crop&w=400&q=80',
-    promptSkeleton: 'A celebratory graphic with soft festive accents marking {{milestoneText}}.',
-    exampleCaption: 'We are celebrating {{milestoneText}}! Thank you to our incredible pet community for trusting us with your pets’ care year after year. We could not do this without you!'
+    promptSkeleton: 'Slávnostná grafika s jemnými sviatočnými prvkami, ktorá oslavuje {{milestoneText}}.',
+    exampleCaption: 'Oslavujeme {{milestoneText}}! Ďakujeme našej neuveriteľnej komunite majiteľov zvierat za to, že nám zverili starostlivosť o svojich miláčikov. Bez vás by sme to nedokázali!'
   },
 
   // Client & Patient Engagement
   {
     id: 'tpl_pet_of_week',
-    category: 'Client & Patient Engagement',
-    name: 'Pet of the Week',
-    description: 'Celebrate a client-submitted pet photo. REQUIRES photo-consent flag before use.',
+    category: 'Klientska interakcia',
+    name: 'Pacient týždňa',
+    description: 'Oslávte miláčika z fotky zaslanej klientom. PRED použitím vyžaduje súhlas s použitím fotky.',
     platforms: ['IG', 'FB'],
     aspectRatios: ['1:1', '4:5'],
     mediaType: 'image',
     imageUrl: 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=400&q=80',
-    promptSkeleton: 'A cute "Pet of the Week" frame showcasing {{petName}} the {{breedOrSpecies}} with star accents.',
-    exampleCaption: 'Meet {{petName}}, our Pet of the Week! {{petName}} brought so many smiles to our clinic during their routine visit. Give them a round of applause in the comments below! 🐾',
+    promptSkeleton: 'Roztomilý rámik "Pacient týždňa" predvádzajúci {{petName}}, plemeno/druh: {{breedOrSpecies}} s doplnkami.',
+    exampleCaption: 'Zoznámte sa s {{petName}}, naším pacientom týždňa! {{petName}} priniesol/priniesla počas rutinnej návštevy do našej ambulancie toľko úsmevov. Venujte mu/jej potlesk v komentároch nižšie! 🐾',
     requiresConsent: true
   },
   {
     id: 'tpl_before_after',
-    category: 'Client & Patient Engagement',
-    name: 'Before/After Grooming',
-    description: 'Cosmetic transformation only, never implies medical outcome. REQUIRES consent flag.',
+    category: 'Klientska interakcia',
+    name: 'Pred a po úprave',
+    description: 'Iba kozmetická transformácia, nikdy nenaznačuje zdravotný výsledok. Vyžaduje súhlas klienta.',
     platforms: ['IG'],
     aspectRatios: ['1:1', '4:5'],
     mediaType: 'image',
     imageUrl: 'https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=400&q=80',
-    promptSkeleton: 'A 2-panel side-by-side cosmetic grooming transformation card for {{petName}}.',
-    exampleCaption: 'Look at this fluffy spa day transformation! {{petName}} walked out feeling fresh and ready for cuddle time. Cosmetic grooming spa appointments fill up fast—book your pet’s pampering session today!',
+    promptSkeleton: 'Grafika pozostávajúca z dvoch častí, ktorá vedľa seba ukazuje kozmetickú zmenu {{petName}}.',
+    exampleCaption: 'Pozrite sa na túto chlpatú premenu zo salónu! {{petName}} odišiel/odišla svieži/a a pripravený/á na maznanie. Termíny pre kozmetickú úpravu sa rýchlo plnia — zarezervujte svojmu miláčikovi skrášľovanie ešte dnes!',
     requiresConsent: true
   },
   {
     id: 'tpl_testimonial_card',
-    category: 'Client & Patient Engagement',
-    name: 'Client Testimonial Card',
-    description: 'Quote-card layout for a REAL testimonial pasted in by staff. Never invent a quote.',
+    category: 'Klientska interakcia',
+    name: 'Recenzia od klienta',
+    description: 'Dizajn s citátom pre SKUTOČNÚ recenziu pridanú personálom. Nikdy si recenziu nevymýšľajte.',
     platforms: ['IG', 'FB'],
     aspectRatios: ['1:1', '4:5'],
     mediaType: 'image',
     imageUrl: 'https://images.unsplash.com/photo-1554692997-c750694e211f?auto=format&fit=crop&w=400&q=80',
-    promptSkeleton: 'An elegant review quote card with 5 star ratings and a warm testimonial text layout.',
+    promptSkeleton: 'Elegantná grafika s hodnotením 5 hviezdičiek a rozložením pre text srdečnej recenzie.',
     exampleCaption: '"{{pastedQuote}}" — {{clientName}}\n\nThank you so much for your kind words! Our staff strives to treat every pet like our own.',
     requiresQuoteInput: true,
     requiresConsent: true
   },
   {
     id: 'tpl_engagement_poll',
-    category: 'Client & Patient Engagement',
-    name: 'Engagement Poll',
-    description: 'Light prompt with illustrated options for community interaction.',
+    category: 'Klientska interakcia',
+    name: 'Zábavná anketa',
+    description: 'Ľahká grafika s ilustrovanými možnosťami pre zapojenie komunity.',
     platforms: ['IG', 'FB'],
     aspectRatios: ['1:1', '4:5'],
     mediaType: 'image',
     imageUrl: 'https://images.unsplash.com/photo-1596773356073-102dbd6ec032?auto=format&fit=crop&w=400&q=80',
-    promptSkeleton: 'An interactive question graphic asking {{pollQuestion}} with Option A vs Option B visual choices.',
-    exampleCaption: 'Settling a friendly debate in the clinic today: Is your pet a morning alarm clock or a habitual snooze button presser? Drop an emoji below to vote! ⏰🐶🐱'
+    promptSkeleton: 'Interaktívna grafika s otázkou {{pollQuestion}} s vizuálnymi možnosťami A a B.',
+    exampleCaption: 'Dnes v ambulancii riešime menšiu debatu: Funguje váš miláčik skôr ako ranný budík alebo rád stláča tlačidlo odloženia budíka? Pridajte emotikon a hlasujte! ⏰🐶🐱'
   },
 
   // Promotions & Announcements
   {
     id: 'tpl_seasonal_offer',
-    category: 'Promotions & Announcements',
-    name: 'Seasonal Offer',
-    description: 'Time-bound offer using brand-kit details. Never invent a discount amount.',
+    category: 'Promo & Oznamy',
+    name: 'Sezónna ponuka',
+    description: 'Časovo obmedzená ponuka, nikdy si nevymýšľajte výšku zľavy.',
     platforms: ['IG', 'FB', 'GBP'],
     aspectRatios: ['1:1', '4:5', '16:9'],
     mediaType: 'image',
     imageUrl: 'https://images.unsplash.com/photo-1605263152648-522dbf9e9de2?auto=format&fit=crop&w=400&q=80',
-    promptSkeleton: 'A clean promotional graphic highlighting {{offerTitle}} at {{clinicName}} with a call-to-book banner.',
-    exampleCaption: 'Spring into wellness! During {{offerTitle}}, schedule your pet’s checkup and ask our team about preventative wellness benefits. [[insert specific offer details]]'
+    promptSkeleton: 'Čistá propagačná grafika zvýrazňujúca ponuku {{offerTitle}} v {{clinicName}} s tlačidlom na objednanie.',
+    exampleCaption: 'Privítajte sezónu s lepším zdravím! Počas akcie {{offerTitle}} si naplánujte prehliadku vášho miláčika a opýtajte sa nášho tímu na výhody preventívnej starostlivosti. [[tu vložte konkrétne detaily ponuky]]'
   },
   {
     id: 'tpl_new_client',
-    category: 'Promotions & Announcements',
-    name: 'New Client Welcome',
-    description: 'Welcoming invitation to book a first visit for new neighbors.',
+    category: 'Promo & Oznamy',
+    name: 'Privítanie nových klientov',
+    description: 'Pozvánka na rezerváciu prvej návštevy pre nových obyvateľov a klientov.',
     platforms: ['IG', 'FB', 'GBP'],
     aspectRatios: ['1:1', '4:5', '16:9'],
     mediaType: 'image',
     imageUrl: 'https://images.unsplash.com/photo-1548767797-d8c844163c4c?auto=format&fit=crop&w=400&q=80',
-    promptSkeleton: 'A warm, inviting graphic welcoming new pets and families to {{clinicName}}.',
-    exampleCaption: 'New to the area or looking for a fear-free veterinary team? We are welcoming new patients! Visit {{website}} or call {{phone}} to schedule your first visit.'
+    promptSkeleton: 'Vrúcna a pozývajúca grafika, ktorá víta nových pacientov a rodiny v ambulancii {{clinicName}}.',
+    exampleCaption: 'Ste v našom okolí noví, alebo hľadáte veterinárny tím s Fear-Free prístupom? Prijímame nových pacientov! Navštívte {{website}} alebo zavolajte na {{phone}} a naplánujte si prvú návštevu.'
   },
   {
     id: 'tpl_holiday_hours',
-    category: 'Promotions & Announcements',
-    name: 'Holiday Hours',
-    description: 'Clear, calm hours-change notice for upcoming holidays.',
+    category: 'Promo & Oznamy',
+    name: 'Sviatočné otváracie hodiny',
+    description: 'Jasné oznámenie o zmene otváracích hodín počas nadchádzajúcich sviatkov.',
     platforms: ['IG', 'FB', 'GBP'],
     aspectRatios: ['1:1', '4:5', '16:9'],
     mediaType: 'image',
     imageUrl: 'https://images.unsplash.com/photo-1574144611937-0df059b5ef3e?auto=format&fit=crop&w=400&q=80',
-    promptSkeleton: 'A clear informational notice detailing clinic holiday hours for {{holidayName}}.',
+    promptSkeleton: 'Jasné informačné oznámenie o otváracích hodinách ambulancie počas sviatku {{holidayName}}.',
     exampleCaption: 'Please note our upcoming clinic hours for {{holidayName}}:\n• {{dateAndHours}}\n\nBe sure to request medication refills early so your pets stay covered!'
   },
   {
     id: 'tpl_urgent_hours',
-    category: 'Promotions & Announcements',
-    name: 'Urgent/Emergency Care Hours',
-    description: 'Clear statement of after-hours availability. Never gives triage medical advice.',
+    category: 'Promo & Oznamy',
+    name: 'Pohotovosť / Urgentná starostlivosť',
+    description: 'Jasné uvedenie dostupnosti po pracovnej dobe. Nikdy tu neposkytujte zdravotné rady a triáž.',
     platforms: ['IG', 'FB', 'GBP'],
     aspectRatios: ['1:1', '4:5', '16:9'],
     mediaType: 'image',
     imageUrl: 'https://images.unsplash.com/photo-1626201389868-b80587d603a1?auto=format&fit=crop&w=400&q=80',
-    promptSkeleton: 'A bold, easy-to-read emergency contact and urgent care hours information card.',
-    exampleCaption: 'Knowing where to turn in an emergency brings peace of mind. Here is our current urgent care availability and trusted partner emergency clinic details for after-hours care.'
+    promptSkeleton: 'Výrazná, ľahko čitateľná informačná karta s núdzovým kontaktom a hodinami urgentnej starostlivosti.',
+    exampleCaption: 'Vedieť, kam sa v núdzi obrátiť, prináša pokoj na duši. Tu je naša dostupnosť pre akútne stavy a detaily pohotovostnej kliniky našich partnerov pre starostlivosť mimo ordinačných hodín.'
   },
 
   // Community & Events
   {
     id: 'tpl_adoption_partner',
-    category: 'Community & Events',
-    name: 'Adoption/Shelter Partner Spotlight',
-    description: 'Spotlight a partner shelter or adoptable pet with clear attribution to partner org.',
+    category: 'Komunita & Podujatia',
+    name: 'Podpora útulkov a adopcií',
+    description: 'Upozornite na partnerský útulok alebo zvieratko na adopciu s jasným uvedením partnerskej organizácie.',
     platforms: ['IG', 'FB'],
     aspectRatios: ['1:1', '4:5'],
     mediaType: 'image',
     imageUrl: 'https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=400&q=80',
-    promptSkeleton: 'A shelter spotlight card featuring {{partnerName}} and an adoptable pet photo.',
-    exampleCaption: 'Community Spotlight! We are proud to partner with {{partnerName}}. Meet {{petName}}, currently looking for a forever home! Contact {{partnerName}} directly for adoption details.'
+    promptSkeleton: 'Karta na podporu útulku s logom {{partnerName}} a fotografiou zvieratka, ktoré hľadá domov.',
+    exampleCaption: 'Sme hrdí na našu spoluprácu s útulkom {{partnerName}}. Zoznámte sa s {{petName}}, ktorý/á aktuálne hľadá trvalý domov! Pre detaily o adopcii kontaktujte priamo {{partnerName}}.'
   },
   {
     id: 'tpl_community_event',
-    category: 'Community & Events',
-    name: 'Community Event Invite',
-    description: 'Open house / vaccine clinic / microchip event with date, time, and location fields.',
+    category: 'Komunita & Podujatia',
+    name: 'Pozvánka na podujatie',
+    description: 'Deň otvorených dverí, očkovacia klinika alebo čipovanie s dôležitými poľami pre dátum, čas a miesto.',
     platforms: ['IG', 'FB', 'GBP'],
     aspectRatios: ['1:1', '4:5', '16:9'],
     mediaType: 'image',
     imageUrl: 'https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?auto=format&fit=crop&w=400&q=80',
-    promptSkeleton: 'An event flyer graphic for {{eventName}} on {{eventDate}} at {{clinicName}}.',
+    promptSkeleton: 'Informačný leták pre podujatie {{eventName}} dňa {{eventDate}} v {{clinicName}}.',
     exampleCaption: 'Join us for {{eventName}}!\n📅 Date: {{eventDate}}\n⏰ Time: {{eventTime}}\n📍 Location: {{clinicName}}\n\nStop by to meet the team, learn pet tips, and enjoy community fun!'
   },
 
   // Reels / Video-first (Stubs)
   {
     id: 'tpl_quick_tip_reel',
-    category: 'Reels / Video-first',
-    name: 'Quick Tip Reel',
-    description: '15-20s hook + one tip + CTA.',
+    category: 'Reels / Video',
+    name: 'Krátke video: Rýchly tip',
+    description: '15-20 sekúnd na zaujatie pozornosti + jeden tip + CTA (výzva k akcii).',
     platforms: ['Reels', 'TikTok'],
     aspectRatios: ['9:16'],
     mediaType: 'video',
-    promptSkeleton: 'Short video concept: 15 second quick wellness tip.',
-    exampleCaption: '3 simple steps to keep your pup’s teeth clean at home! 🦷✨ Tap to learn more.',
+    promptSkeleton: 'Koncept pre krátke video: 15-sekundový rýchly tip pre zdravie zvierat.',
+    exampleCaption: '3 jednoduché kroky, ako udržať zuby vášho psa čisté aj doma! 🦷✨ Kliknite a dozviete sa viac.',
     isStub: true
   },
   {
     id: 'tpl_vet_intro_reel',
-    category: 'Reels / Video-first',
-    name: 'Meet-the-Vet Intro Reel',
-    description: 'Short, warm intro concept for a named vet.',
+    category: 'Reels / Video',
+    name: 'Krátke video: Predstavenie lekára',
+    description: 'Krátky, teplý koncept pre predstavenie konkrétneho veterinára.',
     platforms: ['Reels', 'TikTok'],
     aspectRatios: ['9:16'],
     mediaType: 'video',
-    promptSkeleton: 'Short video concept: Meet Dr. Sarah Lin in 20 seconds.',
-    exampleCaption: 'Get to know Dr. Sarah Lin! Why she chose vet med and her favorite patient stories.',
+    promptSkeleton: 'Koncept pre krátke video: Spoznajte lekára za 20 sekúnd.',
+    exampleCaption: 'Zoznámte sa s naším lekárom! Prečo si vybral veterinárnu medicínu a jeho obľúbené príbehy pacientov.',
     isStub: true
   },
   {
     id: 'tpl_cuteness_reel',
-    category: 'Reels / Video-first',
-    name: 'Patient Cuteness Reel',
-    description: 'Charming short clip featuring a consented patient photo animated to motion.',
+    category: 'Reels / Video',
+    name: 'Krátke video: Roztomilý pacient',
+    description: 'Kúzelný krátky klip s animovanou fotkou pacienta so súhlasom majiteľa.',
     platforms: ['Reels', 'TikTok'],
     aspectRatios: ['9:16'],
     mediaType: 'video',
-    promptSkeleton: 'Short video concept: Cute patient moment clip.',
-    exampleCaption: 'When the treat jar opens at Oakwood Vet! 🐾 Instant happiness.',
+    promptSkeleton: 'Koncept pre krátke video: Krátky moment zo života našich pacientov.',
+    exampleCaption: 'Keď sa u nás v ambulancii otvorí nádoba s pamlskami! 🐾 Okamžité šťastie.',
     isStub: true
   },
   {
     id: 'tpl_procedure_explainer_reel',
-    category: 'Reels / Video-first',
-    name: 'Procedure Explainer Reel',
-    description: 'Plain-language explainer of a routine, non-graphic procedure to reduce client anxiety.',
+    category: 'Reels / Video',
+    name: 'Krátke video: Vysvetlenie zákroku',
+    description: 'Jednoducho vysvetlený bežný (nie krvavý/grafický) zákrok pre zmiernenie stresu klienta.',
     platforms: ['Reels'],
     aspectRatios: ['9:16'],
     mediaType: 'video',
-    promptSkeleton: 'Short video concept: What happens during a routine dental cleaning.',
-    exampleCaption: 'Demystifying routine dental cleanings! Here is how we ensure your pet rests comfortably.',
+    promptSkeleton: 'Koncept pre krátke video: Čo sa deje pri bežnom čistení zubov v narkóze.',
+    exampleCaption: 'Vysvetľujeme, ako prebieha bežné dentálne čistenie! Tu je návod, ako zabezpečujeme, aby váš miláčik pohodlne odpočíval.',
     isStub: true
   }
 ];

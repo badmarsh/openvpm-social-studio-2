@@ -20,7 +20,7 @@ import {
 interface PostDetailModalProps {
   post: Post;
   role: UserRole;
-  onZatvoriť: () => void;
+  onClose: () => void;
   onUpdatePostStatus: (postId: string, newStatus: PostStatus, note?: string) => void;
   onSavePostChanges: (updated: Post) => void;
   onDeletePost: (postId: string) => void;
@@ -29,7 +29,7 @@ interface PostDetailModalProps {
 export const PostDetailModal: React.FC<PostDetailModalProps> = ({
   post,
   role,
-  onZatvoriť,
+  onClose,
   onUpdatePostStatus,
   onSavePostChanges,
   onDeletePost
@@ -56,9 +56,9 @@ export const PostDetailModal: React.FC<PostDetailModalProps> = ({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           postId: post.id,
-          imageUrl: post.generatedImageUrl,
+          imageUrl: post.assetUrl || currentVariant?.mediaUrl,
           caption: editedCaption,
-          platforms: post.platforms
+          platforms: post.platforms || [activePlatform]
         })
       });
       const data = await res.json();
@@ -104,7 +104,7 @@ export const PostDetailModal: React.FC<PostDetailModalProps> = ({
           </div>
 
           <button
-            onClick={onZatvoriť}
+            onClick={onClose}
             className="p-1.5 hover:bg-[#E8E1D5] rounded-xl transition-all cursor-pointer text-gray-500 hover:text-stone-800"
           >
             <X className="w-5 h-5" />
@@ -357,7 +357,7 @@ export const PostDetailModal: React.FC<PostDetailModalProps> = ({
           </button>
 
           <button
-            onClick={onZatvoriť}
+            onClick={onClose}
             className="bg-[#E8E1D5] hover:bg-stone-300 text-[#2D3748] text-xs font-bold px-5 py-2 rounded-xl cursor-pointer"
           >
             Zatvoriť

@@ -5,6 +5,7 @@ import { useToast } from '../context/ToastContext';
 interface Review {
   id: string;
   author: string;
+  platform?: string;
   rating: number;
   text: string;
   date: string;
@@ -44,7 +45,7 @@ export const ReviewsView: React.FC = () => {
     setDraftingId(null);
   };
 
-  const handleSendReply = async (id: string) => {
+  const handleSendReply = async (id: string, platform?: string) => {
     setIsSending(id);
     try {
       const res = await fetch(`/api/reviews/${id}/send-reply`, {
@@ -55,7 +56,7 @@ export const ReviewsView: React.FC = () => {
       const data = await res.json();
       if (data.success) {
         setReviews(reviews.map(r => r.id === id ? data.review : r));
-        showToast('Odpoveď Publikovaná', 'Vaša reakcia bola odoslaná na Google My Business.');
+        showToast('Odpoveď Publikovaná', `Vaša reakcia bola odoslaná na ${platform || 'platformu'}.`);
       }
     } catch (err) {
       console.error(err);
@@ -81,13 +82,13 @@ export const ReviewsView: React.FC = () => {
         <div>
           <div className="flex items-center gap-2 text-xs font-bold text-[#134027] uppercase tracking-wider">
             <MessageSquare className="w-4 h-4 text-[#D4AF37]" />
-            Reputačný Modul Google My Business
+            Reputačný Modul Google My Business & Facebook
           </div>
           <h2 className="text-2xl font-bold text-[#2D3748] mt-1">
             Správa Recenzií & Konverzácií
           </h2>
           <p className="text-xs text-stone-500 mt-1">
-            Sledujte spätú väzbu majiteľov a odpovedajte v upokojujúcom "Fear-Free" tóne.
+            Sledujte spätú väzbu majiteľov na Google a Facebooku a odpovedajte v upokojujúcom "Fear-Free" tóne.
           </p>
         </div>
 
@@ -129,8 +130,8 @@ export const ReviewsView: React.FC = () => {
               </div>
 
               <img
-                src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"
-                alt="Google"
+                src={review.platform === 'Facebook' ? "https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg" : "https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"}
+                alt={review.platform || "Google"}
                 className="w-5 h-5 opacity-80"
               />
             </div>
@@ -153,7 +154,7 @@ export const ReviewsView: React.FC = () => {
                         <CheckCircle2 className="w-3.5 h-3.5 text-[#D4AF37]" />
                         Oficiálna Odpoveď Ambulancie
                       </span>
-                      <span className="text-stone-400 font-normal">Publikované na Google</span>
+                      <span className="text-stone-400 font-normal">Publikované na {review.platform || 'Google'}</span>
                     </div>
                     <p className="font-medium">{review.reply}</p>
                   </div>

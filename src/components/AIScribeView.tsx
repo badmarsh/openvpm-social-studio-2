@@ -49,7 +49,16 @@ export const AIScribeView: React.FC = () => {
     }
   };
 
-  const processAudio = async (blob: Blob) => {
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setAudioURL(url);
+      processAudio(file, file.type);
+    }
+  };
+
+  const processAudio = async (blob: Blob, mimeType: string = 'audio/webm') => {
     setLoading(true);
     setTranscription('');
     
@@ -61,15 +70,26 @@ export const AIScribeView: React.FC = () => {
         const base64data = reader.result?.toString().split(',')[1];
         if (!base64data) return;
 
-        const res = await fetch('/api/transcribe', {
+        const res = await fetch('/api/transcribe-and-generate', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ audioBase64: base64data, mimeType: 'audio/webm' })
+          body: JSON.stringify({ audioBase64: base64data, mimeType })
         });
         const data = await res.json();
         
-        if (data.transcription) {
-          setTranscription(data.transcription);
+        if (data.transcript) {
+          // Format transcript and variants to display beautifully
+          let combined = `### Prepis\n${data.transcript}\n\n`;
+          if (data.socialPostVariants) {
+            combined += `### Návrhy na Sociálne Siete\n`;
+            data.socialPostVariants.forEach((v: any) => {
+              combined += `**${v.type.toUpperCase()}**:\n${v.caption}\n\n`;
+            });
+          }
+          if (data.disclaimer) {
+            combined += `\n*${data.disclaimer}*`;
+          }
+          setTranscription(combined);
           showToast('Hotovo', 'Záznam bol úspešne prepísaný.');
         }
         setLoading(false);
@@ -112,13 +132,21 @@ export const AIScribeView: React.FC = () => {
               <Square className="w-5 h-5 fill-current" /> Zastaviť nahrávanie
             </button>
           ) : (
-            <button 
-              onClick={startRecording}
-              disabled={loading}
-              className="bg-[#134027] hover:bg-teal-900 text-white font-bold py-3 px-8 rounded-full shadow-md flex items-center gap-2 cursor-pointer transition-colors disabled:opacity-50"
-            >
-              <Mic className="w-5 h-5" /> Začať nahrávanie
-            </button>
+            <div className="flex flex-col gap-3">
+              <button 
+                onClick={startRecording}
+                disabled={loading}
+                className="bg-[#134027] hover:bg-teal-900 text-white font-bold py-3 px-8 rounded-full shadow-md flex items-center justify-center gap-2 cursor-pointer transition-colors disabled:opacity-50"
+              >
+                <Mic className="w-5 h-5" /> Začať nahrávanie
+              </button>
+              
+              <label className="bg-[#FAF8F5] hover:bg-[#E8E1D5] text-[#2D3748] border border-[#E8E1D5] font-bold py-2.5 px-8 rounded-full shadow-sm flex items-center justify-center gap-2 cursor-pointer transition-colors disabled:opacity-50">
+                <FileText className="w-4 h-4" /> Nahrávať Audio (Pre testovanie)
+                <input type="file" accept="audio/*" className="hidden" onChange={handleFileUpload} disabled={loading} />
+              </label>
+              <p className="text-[10px] text-stone-400">Podpora pre slovenčinu a iné jazyky</p>
+            </div>
           )}
 
           {audioURL && !isRecording && (
@@ -147,7 +175,7 @@ export const AIScribeView: React.FC = () => {
                 <p className="font-medium animate-pulse text-[#134027]">Spracovávam medicínsky záznam...</p>
               </div>
             ) : transcription ? (
-              <div dangerouslySetInnerHTML={{ __html: marked(transcription) }} />
+              <div dangerouslySetInnerHTML={{ __html: marked(transcription) as string }} />
             ) : (
               <div className="flex flex-col items-center justify-center h-full text-stone-400">
                 <p className="italic text-center">Zatiaľ žiadny prepis.<br/>Záznam sa objaví tu vo formáte SOAP.</p>

@@ -1,0 +1,29 @@
+sed -i "s/promptSkeleton: 'A warm graphic reminding pet owners about {{topic}} (e.g. Heartworm\/Flea\/Rabies protection). Warm teal and soft sand background, featuring a happy healthy dog and cat.',/promptSkeleton: 'Príjemná grafika pripomínajúca majiteľom zvierat {{topic}} (napr. ochrana proti blchám\/kliešťom). Teplé modrozelené a pieskové pozadie, usmievavý zdravý pes a mačka.',/g" src/lib/seedData.ts
+
+sed -i "s/exampleCaption: 'Is your pet up to date on heartworm and flea prevention? Protecting your furry family members is easiest when done regularly. Give us a call or book online to check their wellness schedule!'/exampleCaption: 'Je váš miláčik chránený proti blchám a kliešťom na túto sezónu? Ochrana vašich chlpatých členov rodiny je najjednoduchšia, ak sa robí pravidelne. Zavolajte nám alebo sa objednajte online a skontrolujeme plán prevencie!'/g" src/lib/seedData.ts
+
+sed -i "s/promptSkeleton: 'An inviting graphic highlighting {{benefit}} (e.g. complimentary dental checks or annual bloodwork) as part of custom pet wellness care.',/promptSkeleton: 'Pozývajúca grafika zdôrazňujúca {{benefit}} (napr. preventívna dentálna prehliadka alebo ročný krvný obraz) ako súčasť plánu preventívnej starostlivosti.',/g" src/lib/seedData.ts
+
+sed -i "s/exampleCaption: 'Our comprehensive wellness plans include routine preventative checkups and early health screenings so your pet enjoys a happy, active life. \[\[insert plan details\]\]'/exampleCaption: 'Naše komplexné Wellness plány zahŕňajú rutinné preventívne prehliadky a včasné zdravotné vyšetrenia, aby váš miláčik mal šťastný a aktívny život. \[\[vložte detaily plánu\]\]'/g" src/lib/seedData.ts
+
+sed -i "s/promptSkeleton: 'A gentle image of a loving senior Golden Retriever or tabby cat resting comfortably next to an attentive vet staff member.',/promptSkeleton: 'Jemný obrázok milujúceho staršieho Zlatého retrievera alebo mačky pohodlne odpočívajúcej vedľa pozorného člena veterinárneho personálu.',/g" src/lib/seedData.ts
+
+sed -i "s/exampleCaption: 'Pets age faster than we do! Senior pets (7+ years) thrive with bi-annual wellness exams to catch subtle changes early. Schedule a cozy checkup with our team today.'/exampleCaption: 'Zvieratká starnú rýchlejšie ako my! Starším pacientom (7+ rokov) prospievajú preventívne prehliadky dvakrát ročne, aby sme včas zachytili aj nenápadné zmeny. Naplánujte si s nami vyšetrenie bez stresu ešte dnes.'/g" src/lib/seedData.ts
+
+sed -i "s/promptSkeleton: 'An educational quote card graphic asking \"Did You Know?\" regarding {{factTopic}} with a playful paw illustration.',/promptSkeleton: 'Edukačná grafika s otázkou \"Vedeli ste, že?\" ohľadom {{factTopic}} s hravou ilustráciou labky.',/g" src/lib/seedData.ts
+
+sed -i "s/exampleCaption: 'Did you know cats are masters at masking discomfort? Regular gentle exams help us keep tabs on their joint health and hydration. Have questions? Ask our veterinary team at your next visit!'/exampleCaption: 'Vedeli ste, že mačky sú majstri v maskovaní nepohodlia? Pravidelné a jemné prehliadky nám pomáhajú sledovať ich zdravie kĺbov a hydratáciu. Máte otázky? Opýtajte sa nášho tímu pri vašej ďalšej návšteve!'/g" src/lib/seedData.ts
+
+sed -i "s/promptSkeleton: 'A 2-panel comparison graphic side-by-side: MYTH: {{mythText}} | FACT: {{factText}}. Clean layout with teal headers.',/promptSkeleton: 'Dvojdielna porovnávacia grafika vedľa seba: MÝTUS: {{mythText}} | FAKT: {{factText}}. Čisté rozloženie s tyrkysovými hlavičkami.',/g" src/lib/seedData.ts
+
+sed -i "s/exampleCaption: 'MYTH: Dogs with warm, dry noses are always sick.\\n\\nFACT: A dog’s nose temperature fluctuates naturally throughout the day! Always look at activity level and appetite instead, and call us if you ever feel unsure.'/exampleCaption: 'MÝTUS: Psy s teplým a suchým nosom sú vždy choré.\\n\\nFAKT: Teplota nosa u psa prirodzene kolíše počas dňa! Vždy radšej sledujte úroveň aktivity a chuť do jedla a v prípade pochybností nám zavolajte.'/g" src/lib/seedData.ts
+
+sed -i "s/promptSkeleton: 'A clean checklist graphic titled \"When To Give Our Clinic A Call\" listing key wellness indicators.',/promptSkeleton: 'Čistá grafika so zoznamom nazvaným \"Kedy by ste mali zavolať do našej ambulancie\" uvádzajúca kľúčové indikátory zdravia.',/g" src/lib/seedData.ts
+
+sed -i "s/exampleCaption: 'Not sure if your pet needs to be seen? Here are 4 signs it is time for a quick checkup:\\n• Changes in drinking or eating habits\\n• Persistent coughing or lethargy\\n• Sudden mobility changes\\n• Unexplained hiding behavior'/exampleCaption: 'Nie ste si istí, či by mal vášho miláčika vidieť lekár? Tu sú 4 znaky, že je čas na rýchlu kontrolu:\\n• Zmeny v pitnom režime alebo príjme potravy\\n• Pretrvávajúci kašeľ alebo letargia\\n• Náhle zmeny pohyblivosti\\n• Nevysvetliteľné skrývanie'/g" src/lib/seedData.ts
+
+sed -i "s/name: 'Seasonal Hazard Tip',/name: 'Sezónne Nástrahy',/g" src/lib/seedData.ts
+sed -i "s/description: 'Seasonal-hazard awareness plus a practical prevention tip.',/description: 'Upozornenie na sezónne nástrahy a praktický tip na prevenciu.',/g" src/lib/seedData.ts
+sed -i "s/promptSkeleton: 'A seasonal graphic highlighting safety tips regarding {{seasonOrHazard}} (e.g. summer heat paw protection or holiday plant hazards).',/promptSkeleton: 'Sezónna grafika zdôrazňujúca bezpečnostné tipy týkajúce sa {{seasonOrHazard}} (napr. letné horúčavy, ochrana labiek alebo sviatočné jedovaté rastliny).',/g" src/lib/seedData.ts
+sed -i "s/exampleCaption: 'As temperatures rise, pavement gets hot fast! Test the sidewalk with the back of your hand for 7 seconds. If it is too hot for you, it is too hot for your pup’s paws.'/exampleCaption: 'Ako teploty stúpajú, asfalt sa rýchlo zahrieva! Vyskúšajte teplotu chodníka chrbtom ruky na 7 sekúnd. Ak je to príliš horúce pre vás, je to príliš horúce pre labky vášho psa.'/g" src/lib/seedData.ts
+
